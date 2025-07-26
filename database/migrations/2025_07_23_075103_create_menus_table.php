@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('foto');
             $table->string('nama_menu');
             $table->foreignId('kategori_id')
-                  ->constrained('kategoris')      // references id on kategoris
-                  ->cascadeOnUpdate()             // optional: update cascade
+                  ->constrained('kategoris')
+                  ->cascadeOnUpdate()
                   ->restrictOnDelete();
             $table->integer('harga');
             $table->string('deskripsi');

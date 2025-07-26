@@ -34,8 +34,8 @@
           <th style="padding:8px;border:1px solid #ddd;">Nama Menu</th>
           <th style="padding:8px;border:1px solid #ddd;">Kategori</th>
           <th style="padding:8px;border:1px solid #ddd;">Harga</th>
-          <th style="padding:8px;border:1px solid #ddd;">Deskripsi</th>
-          <th style="padding:8px;border:1px solid #ddd;">Aksi</th>
+          <th style="padding:8px;border:1px solid #ddd; max-width:220px; max-height:220px;">Deskripsi</th>
+          <th style="padding:8px;border:1px solid #ddd; text-align:right; width:80px;">Aksi</th>
         </tr>
       </thead>
       <tbody>
@@ -50,8 +50,8 @@
             <td style="padding:8px;border:1px solid #ddd;">
               {{ optional($menu->kategori)->nama_kategori }}
             </td>
-            <td style="padding:8px;border:1px solid #ddd;">{{ $menu->harga }}</td>
-            <td style="padding:8px;border:1px solid #ddd;">{{ $menu->deskripsi }}</td>
+            <td style="padding:8px;border:1px solid #ddd;">Rp {{ number_format($menu->harga, 0, ',', '.') }}</td>
+            <td style="padding:8px;border:1px solid #ddd; max-width:220px; width:220px; white-space:normal; word-break:break-word;">{{ $menu->deskripsi }}</td>
             <td style="padding:8px;border:1px solid #ddd; text-align:center;">
               <button class="btn-edit"
                       data-id="{{ $menu->id }}"

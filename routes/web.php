@@ -36,4 +36,4 @@ Route::get('/reservasi/{id}', [ReservasiController::class, 'show'])->name('reser
 Route::put('/reservasi/{id}', [ReservasiController::class, 'update'])->name('reservasi.update');
 Route::delete('/reservasi/{id}', [ReservasiController::class, 'destroy'])->name('reservasi.destroy');
 
-Route::get('/home', [LandingController::class, 'index'])->name('landing.index');
+Route::get('/', [LandingController::class, 'index'])->name('landing.index');

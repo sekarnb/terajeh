@@ -12,7 +12,7 @@
 * { box-sizing: border-box; margin:0; padding:0; }
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Wittgenstein';
   background-color: var(--bg);
   color: var(--text);
   line-height: 1.5;
@@ -106,12 +106,12 @@ a { text-decoration:none; color:inherit; }
   padding:80px 0; text-align:center;
 }
 .menu-section h2 {
-  font-family:'Playfair Display', serif;
+  font-family:'Wittgenstein', serif;
   font-size:40px; font-weight:700; margin-bottom:24px;
 }
 .menu-section .tabs {
   display:flex; justify-content:center; gap:24px; margin-bottom:40px;
-  font-family:'Playfair Display', serif; font-weight:500;
+  font-family:'Wittgeinstein', serif; font-weight:500;
 }
 .menu-section .tabs button {
   background:none; border:none; font-size:20px; color: var(--text);
@@ -125,9 +125,50 @@ a { text-decoration:none; color:inherit; }
   height:2px; background:var(--primary);
 }
 .menu-grid {
-  display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-  gap:24px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 kolom */
+  gap: 28px 18px;  /* jarak antar card */
+  margin: 30px auto;
+  max-width: 1200px;
+  padding: 0 12px;
 }
+
+.menu-card {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 12px;
+}
+.menu-card img {
+  width: 300x;
+  height: 300px;
+  margin-bottom: 12px;
+}
+.menu-card .info {
+  text-align: left;
+  width: 100%;
+}
+.menu-card h3 {
+  margin: 0 0 6px 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #202020;
+}
+.menu-card p {
+  margin: 0;
+  color: #202020;
+  font-size: 24px;
+}
+
+@media (max-width: 900px) {
+  .menu-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .menu-grid { grid-template-columns: 1fr; }
+  .menu-card img { height: 180px; }
+}
+
 .menu-item {
   background:#fff; border-radius:8px; overflow:hidden;
   box-shadow:0 2px 8px rgba(0,0,0,0.1);
@@ -235,3 +276,25 @@ a { text-decoration:none; color:inherit; }
 .site-footer nav ul li a { color:var(--bg); font-size:16px; }
 .site-footer .social img { width:50px; margin-right:16px; }
 .site-footer p { font-size:14px; margin-top:16px; }
+
+.tabs {
+  display: flex;
+  gap: 18px;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+.tab-btn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #202020;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  padding: 6px 0;
+  transition: border 0.2s;
+}
+.tab-btn.active {
+  border-bottom: 2px solid #222;
+  font-weight: bold;
+}
+

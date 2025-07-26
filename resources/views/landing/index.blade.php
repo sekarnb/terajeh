@@ -50,40 +50,35 @@
   </section>
 
   {{-- Menu --}}
-  <section id="menu" class="menu-section">
-    <div class="container">
-      <h2>MENU KAMI</h2>
-      <div class="tabs">
-        <button class="active">Steak</button>
-        <button>Indonesian Food</button>
-        <button>Pasta dan Snack</button>
-        <button>Cheese</button>
-        <button>Dessert</button>
-        <button>Drink</button>
-      </div>
-      <div class="menu-grid">
-        {{-- contoh item --}}
-        <div class="menu-item">
-          <img src="https://placehold.co/292x292" alt="Grilled Chicken">
+<section id="menu" class="menu-section">
+  <div class="container">
+    <h2>MENU KAMI</h2>
+    <div class="tabs" id="kategori-tabs">
+      <button class="tab-btn active" data-kategori="all">Semua</button>
+      @foreach($kategoris as $kat)
+        <button class="tab-btn" data-kategori="{{ $kat->id }}">{{ $kat->nama_kategori }}</button>
+      @endforeach
+    </div>
+    <div class="menu-grid" id="menu-grid">
+      @forelse($menus as $idx => $menu)
+        <div class="menu-card"
+          data-kategori="{{ $menu->kategori_id }}"
+          style="{{ $idx > 7 ? 'display:none;' : '' }}"> {{-- Tampilkan hanya 8 awal --}}
+          <img src="{{ asset('storage/'.$menu->foto) }}" alt="Foto {{ $menu->nama_menu }}">
           <div class="info">
-            <h3>Grilled Chicken</h3>
-            <p>Rp 57.500</p>
+            <h3>{{ $menu->nama_menu }}</h3>
+            <p>Rp {{ number_format($menu->harga, 0, ',', '.') }}</p>
           </div>
         </div>
-        {{-- ulangi sesuai data --}}
-      </div>
+      @empty
+        <div class="menu-card" style="grid-column: span 4;">
+          <p>Belum ada data menu.</p>
+        </div>
+      @endforelse
     </div>
-  </section>
+  </div>
+</section>
 
-  {{-- Steak Doneness --}}
-  <section class="doneness">
-    <div class="container">
-      <h2>TINGKAT KEMATANGAN STEAK</h2>
-      <div class="img-wrap">
-        <img src="https://placehold.co/1030x654" alt="Doneness Guide">
-      </div>
-    </div>
-  </section>
 
   {{-- CTA Strip --}}
   <section id="reserve" class="cta-strip">
@@ -156,6 +151,48 @@
     </div>
     <p>#SteaknyaRasaIndonesia</p>
   </footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  const cards   = document.querySelectorAll('.menu-card');
+
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      // Toggle active class pada tab
+      tabBtns.forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+
+      const kat = this.dataset.kategori;
+
+      // Reset: Semua menu disembunyikan dulu
+      cards.forEach(card => { card.style.display = 'none'; });
+
+      if (kat === 'all') {
+        // Tampilkan hanya 8 pertama
+        cards.forEach((card, i) => {
+          if (i < 8) card.style.display = 'block';
+        });
+      } else {
+        // Tampilkan SEMUA yang kategori sesuai
+        let ditemukan = false;
+        cards.forEach(card => {
+          if (card.dataset.kategori === kat) {
+            card.style.display = 'block';
+            ditemukan = true;
+          }
+        });
+        // Jika tidak ditemukan
+        if (!ditemukan) {
+          // Opsional: Bisa tampilkan "Belum ada data menu."
+        }
+      }
+    });
+  });
+});
+</script>
+
+
 
 </body>
 </html>
