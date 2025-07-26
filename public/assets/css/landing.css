@@ -9,6 +9,13 @@
   --text: #202020;
 }
 
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  background: #FAF6EF;
+}
+
 * { box-sizing: border-box; margin:0; padding:0; }
 
 body {
@@ -27,52 +34,115 @@ a { text-decoration:none; color:inherit; }
   position: absolute; top:0; left:0; width:100%;
   display:flex; justify-content:space-between; align-items:center;
   padding: 20px 5%;
-  background: transparent;
+  background: #2D3832;
   z-index:100;
+}
+.site-header li a:hover {
+  text-decoration: underline;
 }
 .site-header .logo img { height:40px; }
 .site-header nav ul {
   display:flex; gap:32px; list-style:none;
-  font-family:'Playfair Display', serif; font-weight:500;
+  font-family:'Wittgenstein', serif; font-weight:500;
 }
 .site-header nav ul li a { font-size:16px; color: var(--white); }
 .site-header .btn-reserve {
   border:1px solid var(--white);
   color:var(--white);
   padding:8px 16px;
-  border-radius:4px;
-  font-family:'Playfair Display', serif;
+  font-family:'Wittgenstein', serif;
   font-size:16px;
 }
 
 /* Hero */
 .hero {
-  position: relative; width:100%; height:95vh;
-  overflow:hidden;
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  min-height: 550px;
+  overflow: hidden;
+  background: #FAF6EF;
 }
-.hero img {
-  width:100%; height:100%; object-fit:cover;
+
+/* BG image benar-benar nutup semua */
+.hero-bg {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100%;
+  min-height: 100%;
+  object-fit: cover;
+  z-index: 1;
+  max-width: 100vw;
 }
-.hero::after {
-  content:''; position:absolute; inset:0;
-  background: linear-gradient(180deg, var(--bg) 0%, rgba(0,0,0,0.7) 100%);
+
+/* GRADIENT MENUTUPI SELURUH GAMBAR DARI BAWAH KE ATAS */
+.hero-gradient {
+  position: absolute;
+  top: 30%; left: 0; width: 100vw; height: 100%;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    #FAF6EF 0%,
+    rgba(250,246,239,0.96) 25%,
+    rgba(250,246,239,0.82) 50%,
+    rgba(250,246,239,0.4) 75%,
+    rgba(250,246,239,0) 100%
+  );
 }
-.hero .cta {
-  position:absolute; top:50%; left:50%;
-  transform:translate(-50%,-50%);
-  text-align:center; color:var(--white);
+
+.hero-gradient-bottom {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  width: 100vw;
+  height: 7vh; /* Sesuaikan, 5-10vh biasanya sudah pas */
+  z-index: 4;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(250,246,239,0) 0%,
+    #F0EBE4 90%
+  );
 }
-.hero .cta h1 {
-  font-family:'Playfair Display', serif;
-  font-size:64px; font-weight:400; margin-bottom:16px;
+
+
+.cta {
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 3;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-.hero .cta .btn {
-  background: var(--primary);
+
+.logo-cta {
+  margin-bottom: 32px;
+  width: 230px;
+  max-width: 85vw;
+  filter: drop-shadow(0 2px 12px rgba(0,0,0,0.13));
+}
+
+.btn-cta {
+  background: #232e27;
   color: #fff;
-  font-family:'Playfair Display', serif;
-  padding:12px 24px;
-  border:none; border-radius:4px;
-  font-size:18px;
+  font-family: 'Wittgenstein', serif;
+  font-size: 20px;
+  padding: 16px 44px;
+  border: none;
+  box-shadow: 0 2px 10px rgba(44,62,80,.13);
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background .2s;
+  letter-spacing: .5px;
+}
+
+.btn-cta:hover {
+  background: #3b493f;
 }
 
 /* About */
@@ -80,11 +150,11 @@ a { text-decoration:none; color:inherit; }
   text-align:center; padding:80px 0;
 }
 .about .subtitle {
-  font-family:'Playfair Display', serif;
+  font-family:'Wittgenstein', serif;
   font-size:32px; font-weight:700; margin-bottom:8px;
 }
 .about .title {
-  font-family:'Playfair Display', serif;
+  font-family:'Wittgenstein', serif;
   font-size:48px; font-weight:400; margin-bottom:24px;
   line-height:1.2;
 }
@@ -98,7 +168,7 @@ a { text-decoration:none; color:inherit; }
   display:flex; gap:16px; justify-content:center;
 }
 .about .gallery img {
-  width:32%; border-radius:8px; object-fit:cover;
+  width:397px; height:531px; object-fit:cover;
 }
 
 /* Menu */
@@ -111,10 +181,10 @@ a { text-decoration:none; color:inherit; }
 }
 .menu-section .tabs {
   display:flex; justify-content:center; gap:24px; margin-bottom:40px;
-  font-family:'Wittgeinstein', serif; font-weight:500;
+  font-family:'Wittgenstein', serif; font-weight:500;
 }
 .menu-section .tabs button {
-  background:none; border:none; font-size:20px; color: var(--text);
+  background:none; border:none; font-family:'Wittgenstein'; font-size:20px; color: var(--text);
   cursor:pointer; position:relative; padding:4px 0;
 }
 .menu-section .tabs button.active {
@@ -152,7 +222,6 @@ a { text-decoration:none; color:inherit; }
 .menu-card h3 {
   margin: 0 0 6px 0;
   font-size: 24px;
-  font-weight: 600;
   color: #202020;
 }
 .menu-card p {
@@ -188,17 +257,30 @@ a { text-decoration:none; color:inherit; }
 
 /* Steak Doneness */
 .doneness {
-  padding:80px 0; text-align:center;
+  padding: 80px 0;
+  text-align: center;
+  background: #F0EBE4; /* Warna sama dengan section lain */
 }
+
 .doneness h2 {
-  font-family:'Playfair Display', serif;
-  font-size:40px; font-weight:700; margin-bottom:24px;
+  font-family: 'Wittgenstein', serif;
+  font-size: 40px;
+  font-weight: 700;
+  margin-bottom: 32px;
+  color: #2D3832;
+  letter-spacing: 1px;
 }
+
 .doneness .img-wrap {
-  width:90%; max-width:1030px; margin:auto;
+  width: 90%;
+  max-width: 1030px;
+  margin: 0 auto;
 }
+
 .doneness .img-wrap img {
-  width:100%; border-radius:8px;
+  width: 100%;
+  border-radius: 8px;
+  background: #fff;
 }
 
 /* CTA */
@@ -213,8 +295,8 @@ a { text-decoration:none; color:inherit; }
 }
 .cta-strip .btn {
   border:1px solid var(--bg);
-  padding:12px 24px; border-radius:4px;
-  font-size:18px; font-family:'Playfair Display', serif;
+  padding:12px 24px;
+  font-size:18px; font-family:'Wittgenstein', serif;
   color: var(--bg); background:transparent;
 }
 
@@ -223,7 +305,7 @@ a { text-decoration:none; color:inherit; }
   padding:80px 0; text-align:center;
 }
 .contact h2 {
-  font-family:'Playfair Display', serif;
+  font-family:'Wittgenstein', serif;
   font-size:40px; font-weight:700; margin-bottom:48px;
 }
 .contact .cards {
@@ -243,39 +325,168 @@ a { text-decoration:none; color:inherit; }
   font-size:16px; text-align:center;
 }
 .contact .map {
-  width:100%; max-width:900px; height:400px; margin:auto;
+  width:100%; max-width:1000px; height:400px; margin-left:100px; margin-right:100px;
   border:none; border-radius:8px;
 }
 
 /* Hours */
 .hours {
-  padding:80px 0; text-align:center;
+  padding: 80px 0;
+  background: #F0EBE4;
+  text-align: center;
 }
+
 .hours h2 {
-  font-family:'Playfair Display', serif;
-  font-size:40px; font-weight:700; margin-bottom:40px;
+  font-family: 'Wittgenstein', serif;
+  font-size: 40px;
+  font-weight: 700;
+  margin-bottom: 52px;
+  color: #2D3832;
+  letter-spacing: 1px;
 }
-.hours .row {
-  display:flex; justify-content:center; gap:80px;
-  flex-wrap:wrap;
+
+.hours-table {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 34px;
 }
-.hours .row .col {
-  font-size:20px; font-weight:500;
+
+.hours-table .row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 120px;
+  margin-bottom: 0;
 }
-.hours .row .col b { display:block; font-size:24px; margin-bottom:8px; }
+
+.hours-table .col {
+  font-family: 'Wittgenstein', serif;
+  font-size: 40px;
+  color: #2D3832;
+  font-weight: 400;
+  min-width: 320px;  /* agar kolom rata */
+}
+
+.hours-table .col.day {
+  text-align: left;
+}
+
+@media (max-width: 900px) {
+  .hours-table .row {
+    gap: 40px;
+  }
+  .hours-table .col {
+    font-size: 32px;
+    min-width: 160px;
+  }
+}
+
+@media (max-width: 600px) {
+  .hours-table .row {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  .hours-table .col {
+    min-width: 0;
+    font-size: 24px;
+  }
+}
 
 /* Footer */
 .site-footer {
-  background:var(--primary); color:var(--bg);
-  padding:40px 5%; display:flex; justify-content:space-between; flex-wrap:wrap;
+  background: #2D3832;
+  color: #FAF6EF;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 60px 7% 44px 7%;
+  font-family: 'Wittgenstein', serif;
+  gap: 24px;
 }
-.site-footer .logo img { height:60px; }
-.site-footer nav ul {
-  display:flex; gap:24px; list-style:none;
+
+/* Kiri: alamat + hashtag */
+.footer-left {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 32px;
 }
-.site-footer nav ul li a { color:var(--bg); font-size:16px; }
-.site-footer .social img { width:50px; margin-right:16px; }
-.site-footer p { font-size:14px; margin-top:16px; }
+.footer-address p, .footer-address a {
+  font-size: 16px;
+  margin-bottom: 3px;
+}
+.footer-address a {
+  color: #FAF6EF;
+  text-decoration: underline;
+  margin-bottom: 10px;
+  display: inline-block;
+}
+.footer-tagline {
+  font-size: 40px;
+  font-weight: bold;
+  margin-top: 16px;
+  color: #FAF6EF;
+  letter-spacing: 0.5px;
+}
+
+/* Tengah: Menu navigasi */
+.footer-center {
+  flex: 1.5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.footer-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.footer-menu li a {
+  color: #FAF6EF;
+  font-size: 16px;
+  font-family: 'Wittgenstein', serif;
+  text-decoration: none;
+  transition: color .15s;
+}
+.footer-menu li a:hover {
+  text-decoration: underline;
+}
+
+/* Kanan: Logo */
+.footer-right {
+  flex: 1.5;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 44px;
+}
+.footer-logo {
+  height: 100px;
+}
+.footer-halal {
+  height: 100px;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .site-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 32px 5% 28px 5%;
+    gap: 32px;
+  }
+  .footer-center, .footer-right { justify-content: flex-start; }
+  .footer-logo, .footer-halal { height: 44px; }
+  .footer-tagline { font-size: 32px; }
+}
 
 .tabs {
   display: flex;
