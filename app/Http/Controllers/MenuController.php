@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Kategori;
+use App\Models\Category;
 use App\Models\Menu;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -12,90 +12,61 @@ class MenuController extends Controller
     public function index()
     {
         // Eager‐load relasi kategori
-        $menus     = Menu::with('kategori')->oldest()->get();
-        $kategoris = Kategori::all();
+        $menu     = Menu::with('category')->oldest()->paginate();
+        $categories = Category::get();
 
-        return view('menu.index', compact('menus','kategoris'));
+        return view('menu.index', [
+            'menu' => $menu,
+            'categories' => $categories,
+        ]);
     }
 
     public function store(Request $request)
     {
-        // Bersihkan harga: hanya digit
-        $hargaClean = preg_replace('/\D/', '', $request->harga);
-        $request->merge(['harga' => $hargaClean]);
-
-        // Validasi input
         $validated = $request->validate([
-            'foto'        => 'required|image|mimes:jpg,jpeg,png,svg|max:2048',
-            'nama_menu'   => 'required|string|max:255',
-            'kategori_id' => 'required|integer|exists:kategoris,id',
-            'harga'       => 'required|integer|min:0',
-            'deskripsi'   => 'required|string|max:255',
+            'category_id' => ['required', 'integer', 'exists:categories,id'],
+            'foto'        => ['required', 'image', 'mimes:jpg,jpeg,png,svg', 'max:2048'],
+            'nama'        => ['required', 'string', 'max:255'],
+            'harga'       => ['required', 'integer', 'min:0'],
+            'deskripsi'   => ['required', 'string', 'max:255'],
         ]);
 
-        // Simpan file foto ke storage/app/public/menus
-        $path = $request->file('foto')->store('menus','public');
+        $validated['foto'] = $request->file('foto')->store('menus');
 
-        // Simpan record
-        Menu::create([
-            'foto'        => $path,
-            'nama_menu'   => $validated['nama_menu'],
-            'kategori_id' => $validated['kategori_id'],
-            'harga'       => $validated['harga'],
-            'deskripsi'   => $validated['deskripsi'],
-        ]);
+        Menu::create($validated);
 
-        return redirect()->route('menu.index')
-                         ->with('success','Menu berhasil ditambahkan!');
-    }
-
-    public function show(Menu $menu)
-    {
-        // (tidak dipakai di view—boleh dihapus)
-        return response()->json($menu);
+        return redirect()->back()->with('success','Menu berhasil ditambahkan!');
     }
 
     public function update(Request $request, Menu $menu)
     {
-        $hargaClean = preg_replace('/\D/', '', $request->harga);
-        $request->merge(['harga' => $hargaClean]);
-
         $validated = $request->validate([
-            'foto'        => 'nullable|image|mimes:jpg,jpeg,png,svg|max:2048',
-            'nama_menu'   => 'required|string|max:255',
-            'kategori_id' => 'required|integer|exists:kategoris,id',
-            'harga'       => 'required|integer|min:0',
-            'deskripsi'   => 'required|string|max:255',
+            'category_id' => ['required', 'integer', 'exists:categories,id'],
+            'foto'        => ['required', 'image', 'mimes:jpg,jpeg,png,svg', 'max:2048'],
+            'nama'        => ['required', 'string', 'max:255'],
+            'harga'       => ['required', 'integer', 'min:0'],
+            'deskripsi'   => ['required', 'string', 'max:255'],
         ]);
 
-        // Jika upload foto baru
         if ($request->hasFile('foto')) {
-            if ($menu->foto && Storage::disk('public')->exists($menu->foto)) {
-                Storage::disk('public')->delete($menu->foto);
-            }
-            $menu->foto = $request->file('foto')->store('menus','public');
+            Storage::delete($menu->foto);
+            $validated['foto'] = $request->file('foto')->store('menus');
+        } else {
+            $validated['foto'] = $menu->foto;
         }
 
         // Update data
-        $menu->update([
-            'nama_menu'   => $validated['nama_menu'],
-            'kategori_id' => $validated['kategori_id'],
-            'harga'       => $validated['harga'],
-            'deskripsi'   => $validated['deskripsi'],
-        ]);
+        $menu->update($validated);
 
-        return redirect()->route('menu.index')
-                         ->with('success','Menu berhasil diperbarui!');
+        return redirect()->back()->with('success','Menu berhasil diperbarui!');
     }
 
     public function destroy(Menu $menu)
     {
-        if ($menu->foto && Storage::disk('public')->exists($menu->foto)) {
-            Storage::disk('public')->delete($menu->foto);
-        }
+        Storage::delete($menu->foto);
+
         $menu->delete();
 
-        return redirect()->route('menu.index')
-                         ->with('success','Menu berhasil dihapus!');
+        return redirect()->back()->with('success','Menu berhasil dihapus!');
     }
 }

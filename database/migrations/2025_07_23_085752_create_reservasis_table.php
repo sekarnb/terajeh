@@ -13,14 +13,14 @@ return new class extends Migration
     {
         Schema::create('reservasis', function (Blueprint $table) {
             $table->id();
-            $table->string('cust');
-            $table->integer('no_hp');
-            $table->string('tamu');
-            $table->date('tgl');
-            $table->time('waktu');
-            $table->integer('total_bayar');
-            $table->string('status');
-            $table->string('bukti');
+            $table->string('nama_customer');
+            $table->string('no_hp');
+            $table->integer('jumlah_tamu');
+            $table->date('tanggal');
+            $table->time('jam');
+            $table->integer('total_bayar')->nullable();
+            $table->string('bukti_bayar')->nullable();
+            $table->integer('status');
             $table->timestamps();
         });
     }

@@ -2,62 +2,51 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Kategori;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class KategoriController extends Controller
 {
     public function index()
     {
-        $kategoris = Kategori::orderBy('created_at', 'asc')->get();
-        return view('kategori.index', compact('kategoris'));
+        $categories = Category::query()->paginate(10);
+
+        return view('kategori.index', [
+            'categories' => $categories,
+        ]);
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'nama_kategori' => 'required|string|max:255'
+            'name' => ['required', 'string', 'max:255', 'unique:categories,name']
         ]);
 
-        Kategori::create([
-            'nama_kategori' => $request->nama_kategori
+        Category::create([
+            'name' => $request->name
         ]);
 
-            return redirect()
-        ->route('kategori.index')
-        ->with('success', 'Kategori berhasil ditambahkan.');
+        return redirect()->route('categories.index')->with('success', 'Kategori berhasil ditambahkan.');
 
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Category $category)
     {
         $request->validate([
-            'nama_kategori' => 'required|string|max:255'
+            'name' => ['required', 'string', 'max:255', "unique:categories,name,{$category->id}"]
         ]);
 
-        $kategori = Kategori::findOrFail($id);
-        $kategori->update([
-            'nama_kategori' => $request->nama_kategori
+        $category->update([
+            'name' => $request->name
         ]);
 
-        return redirect()
-        ->route('kategori.index')
-        ->with('success', 'Kategori berhasil diupdate.');
+        return redirect()->route('categories.index')->with('success', 'Kategori berhasil diupdate.');
     }
 
-    public function destroy($id)
+    public function destroy(Category $category)
     {
-        $kategori = Kategori::findOrFail($id);
-        $kategori->delete();
+        $category->delete();
 
-        return redirect()
-        ->route('kategori.index')
-        ->with('success', 'Kategori berhasil dihapus.');
-    }
-
-    public function show($id)
-    {
-        $kategori = Kategori::findOrFail($id);
-        return response()->json($kategori);
+        return redirect()->route('categories.index')->with('success', 'Kategori berhasil dihapus.');
     }
 }

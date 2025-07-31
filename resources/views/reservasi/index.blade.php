@@ -1,163 +1,115 @@
-@extends('layouts.app')
+@extends('layouts.app', ['title' => 'Daftar Reservasi'])
 
 @section('content')
-{{-- Load SweetAlert2 --}}
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<div class="mt-12 p-4 border border-gray-300 rounded-xl">
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-500">
+            <thead>
+                <tr>
+                    <th class="px-6 py-3 text-left font-medium tracking-wider">No</th>
+                    <th class="px-6 py-3 text-left font-medium tracking-wider">Cust</th>
+                    <th class="px-6 py-3 text-left font-medium tracking-wider">No. HP</th>
+                    <th class="px-6 py-3 text-left font-medium tracking-wider">Tamu</th>
+                    <th class="px-6 py-3 text-left font-medium tracking-wider">Tgl</th>
+                    <th class="px-6 py-3 text-left font-medium tracking-wider">Waktu</th>
+                    <th class="px-6 py-3 text-left font-medium tracking-wider">Total Bayar</th>
+                    <th class="px-6 py-3 text-left font-medium tracking-wider">Status</th>
+                    <th class="px-6 py-3 text-left font-medium tracking-wider">Bukti</th>
+                    <th class="px-6 py-3 text-left font-medium tracking-wider">Aksi</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                @forelse ($reservasi as $r)
+                <tr>
+                    <td class="px-6 py-4 text-gray-500">
+                        {{ $reservasi->firstItem() + $loop->index }}
+                    </td>
+                    <td class="px-6 py-4 text-gray-500">
+                        {{ $r->nama_customer }}
+                    </td>
+                    <td class="px-6 py-4 text-gray-500">
+                        {{ $r->no_hp }}
+                    </td>
+                    <td class="px-6 py-4 text-gray-500">
+                        {{ $r->jumlah_tamu }}
+                    </td>
+                    <td class="px-6 py-4 text-gray-500">
+                        {{ $r->tanggal->format('d F Y') }}
+                    </td>
+                    <td class="px-6 py-4 text-gray-500">
+                        {{ $r->jam->format('H.i') }}
+                    </td>
+                    <td class="px-6 py-4 text-gray-500">
+                        Rp. {{ number_format($r->total_bayar, 2) }},-
+                    </td>
+                    <td class="px-6 py-4 text-gray-500">
+                        <span class="{{ $r->status->bgColor() }} {{ $r->status->textColor() }} px-2 py-1 rounded-full text-xs">
+                            {{ $r->status->label() }}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 text-gray-500">
+                        <button onclick="document.getElementById('preview-modal-{{ $r->id }}').classList.remove('hidden')" type="button" class="bg-secondary text-white px-3 py-1 rounded-xl transition-colors cursor-pointer">
+                            {{ $r->status === \App\Enums\ReservasiStatus::PENDING ? 'Tinjau' : 'Lihat' }}
+                        </button>
+                    </td>
+                    <td class="px-6 py-4 text-gray-500">
+                        <div class="flex items-center gap-2">
+                            <button onclick="document.getElementById('edit-modal-{{ $r->id }}').classList.remove('hidden')" type="button" class="text-gray-500 hover:text-gray-700 transition-colors cursor-pointer">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                                </svg>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="10" class="px-6 py-4 text-center text-gray-500">Tidak ada menu ditemukan</td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
 
-<div class="content-body" style="padding: 30px 40px;">
-  {{-- Breadcrumb --}}
-  <div style="font-size:14px; color:#969BA0; margin-bottom:8px;">
-    Beranda / <span style="color:#464255; font-weight:600;">Data Reservasi</span>
-  </div>
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-      <h1>Data Reservasi</h1>
-  </div>
-
-  {{-- Card --}}
-  <div style="background:#FFF; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.05); overflow:hidden;">
-
-    {{-- Tabel --}}
-    <div style="padding: 0 30px 30px;">
-      <table style="width:100%; border-collapse:collapse; margin-top:16px; font-size:14px;">
-        <thead>
-          <tr style="background:#F5F5F5; text-align:left;">
-            <th style="padding:12px; border-bottom:1px solid #DDD; width:40px;">No.</th>
-            <th style="padding:12px; border-bottom:1px solid #DDD;">Cust</th>
-            <th style="padding:12px; border-bottom:1px solid #DDD;">No. HP</th>
-            <th style="padding:12px; border-bottom:1px solid #DDD;">Tamu</th>
-            <th style="padding:12px; border-bottom:1px solid #DDD;">Tgl</th>
-            <th style="padding:12px; border-bottom:1px solid #DDD;">Waktu</th>
-            <th style="padding:12px; border-bottom:1px solid #DDD;">Total Bayar</th>
-            <th style="padding:12px; border-bottom:1px solid #DDD;">Status</th>
-            <th style="padding:12px; border-bottom:1px solid #DDD;">Bukti</th>
-            <th style="padding:12px; border-bottom:1px solid #DDD; text-align:center; width:140px;">Aksi</th>
-          </tr>
-        </thead>
-        <tbody>
-          @foreach($reservasis as $i => $r)
-          <tr>
-            <td style="padding:12px; border-bottom:1px solid #EEE;">{{ $i+1 }}</td>
-            <td style="padding:12px; border-bottom:1px solid #EEE;">{{ $r->nama_customer }}</td>
-            <td style="padding:12px; border-bottom:1px solid #EEE;">{{ $r->nomor_hp }}</td>
-            <td style="padding:12px; border-bottom:1px solid #EEE;">{{ $r->jumlah_tamu }} orang</td>
-            <td style="padding:12px; border-bottom:1px solid #EEE;">{{ $r->tanggal->format('d/m/Y') }}</td>
-            <td style="padding:12px; border-bottom:1px solid #EEE;">{{ $r->waktu }}</td>
-            <td style="padding:12px; border-bottom:1px solid #EEE;">Rp {{ number_format($r->total_bayar,0,',','.') }},-</td>
-            <td style="padding:12px; border-bottom:1px solid #EEE;">
-              @if($r->status=='pending')
-                <span style="background:#FBEAC9; color:#926F2A; padding:4px 8px; border-radius:12px; font-size:12px;">Pending</span>
-              @else
-                <span style="background:#DBF8E8; color:#2A6F48; padding:4px 8px; border-radius:12px; font-size:12px;">Selesai</span>
-              @endif
-            </td>
-            <td style="padding:12px; border-bottom:1px solid #EEE;">
-              <button class="btn-bukti"
-                      data-bukti="{{ asset('storage/bukti/'.$r->bukti) }}"
-                      style="background:none;border:none;cursor:pointer;color:#2D3832;">
-                Tinjau
-              </button>
-            </td>
-            <td style="padding:12px; border-bottom:1px solid #EEE; text-align:center;">
-              <button class="btn-action"
-                      data-id="{{ $r->id }}"
-                      style="background:#2D3832; color:#FFF; border:none; padding:6px 12px; border-radius:8px; margin-right:6px;">
-                {{ $r->status=='pending' ? 'Tinjau' : 'Lihat' }}
-              </button>
-              <button class="btn-view"
-                      data-json='@json($r)'
-                      style="background:none;border:none;cursor:pointer;">
-                <i class="fas fa-eye" style="color:#2D3832;"></i>
-              </button>
-            </td>
-          </tr>
-          @endforeach
-        </tbody>
-      </table>
-
-      {{-- pagination --}}
-      <div style="margin-top:16px; text-align:right;">
-        {{ $reservasis->links() }}
-      </div>
+        <div class="mt-4">
+            {{ $reservasi->links() }}
+        </div>
     </div>
-  </div>
 </div>
 
-{{-- Modal Detail Reservasi --}}
-<div id="modal-reservasi" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:1000; justify-content:center; align-items:center;">
-  <div style="background:#FFF; border-radius:12px; width:500px; padding:24px; position:relative;">
-    <button id="modal-close" style="position:absolute; top:12px; right:12px; background:none; border:none; font-size:24px; cursor:pointer;">×</button>
-    <h3 style="margin-top:0; font-size:18px; font-weight:600;">Detail Reservasi</h3>
-    <table style="width:100%; font-size:14px; margin-top:12px;">
-      <tr><td>Nama</td><td>: <span id="d-nama"></span></td></tr>
-      <tr><td>No. HP</td><td>: <span id="d-hp"></span></td></tr>
-      <tr><td>Jumlah Tamu</td><td>: <span id="d-tamu"></span></td></tr>
-      <tr><td>Tanggal</td><td>: <span id="d-tgl"></span></td></tr>
-      <tr><td>Waktu</td><td>: <span id="d-waktu"></span></td></tr>
-      <tr><td>Total Bayar</td><td>: <span id="d-bayar"></span></td></tr>
-      <tr><td>Status</td><td>: <span id="d-status"></span></td></tr>
-    </table>
-  </div>
+
+{{-- preview image --}}
+@forelse ($reservasi as $r)
+<div id="preview-modal-{{ $r->id }}" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+    <div class="bg-white rounded-lg px-6 py-8 max-w-sm w-full">
+        <div class="flex items-center justify-between mb-4">
+            <div>
+                <h2 class="text-lg mb-2">Bukti TF</h2>
+            </div>
+            <div onclick="document.getElementById('preview-modal-{{ $r->id }}').classList.add('hidden')" class="cursor-pointer -mt-4 p-1 text-red-500 bg-red-200 rounded-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+            </div>
+        </div>
+
+        <div class="text-lg flex items-center justify-center text-center mb-4">
+            <img src="{{ $r->bukti_bayar() }}" alt="{{ $r->nama_customer }}">
+        </div>
+        <form action="#" method="post">
+            @csrf
+            @method('delete')
+
+            <div class="mt-6 flex gap-4">
+                @if($r->status === \App\Enums\ReservasiStatus::PENDING)
+                <button type="submit" name="status" value="{{ \App\Enums\ReservasiStatus::DITOLAK }}" class="w-full cursor-pointer bg-red-500 hover:bg-red-700 text-white px-4 py-3 rounded-xl">Tolak</button>
+                <button type="submit" name="status" value="{{ \App\Enums\ReservasiStatus::SELESAI }}" class="w-full cursor-pointer bg-green-500 hover:bg-green-700 text-white px-4 py-3 rounded-xl">Terima</button>
+                @else
+                <button type="button" onclick="document.getElementById('preview-modal-{{ $r->id }}').classList.add('hidden')" class="w-full cursor-pointer bg-secondary hover:bg-secondary-dark text-white px-4 py-3 rounded-xl">Selesai</button>
+                @endif
+            </div>
+        </form>
+    </div>
 </div>
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  // SweetAlert pop-up bukti transfer
-  document.querySelectorAll('.btn-bukti').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const url = btn.dataset.bukti;
-      Swal.fire({
-        title: 'Bukti Transfer',
-        imageUrl: url,
-        imageAlt: 'Bukti Transfer',
-        showCloseButton: true,
-        showConfirmButton: false,
-        width: 'auto',
-      });
-    });
-  });
-
-  // Tombol Tinjau / Lihat: misal ubah status via modal atau langsung redirect
-  document.querySelectorAll('.btn-action').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const id = btn.dataset.id;
-      // contoh: konfirmasi ubah status pending→selesai
-      @if(request()->has('filter') && request('filter')=='all')
-      if (btn.textContent.trim()==='Tinjau') {
-        Swal.fire({
-          title: 'Tandai sebagai selesai?',
-          icon: 'question',
-          showCancelButton: true,
-          confirmButtonText: 'Ya',
-          cancelButtonText: 'Batal',
-        }).then(res => {
-          if (res.isConfirmed) {
-            window.location = `/reservasi/${id}/selesai`;
-          }
-        });
-      }
-      @endif
-    });
-  });
-
-  // Modal Detail Reservasi
-  const modal = document.getElementById('modal-reservasi');
-  const close = document.getElementById('modal-close');
-
-  document.querySelectorAll('.btn-view').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const data = JSON.parse(btn.dataset.json);
-      document.getElementById('d-nama').textContent   = data.nama_customer;
-      document.getElementById('d-hp').textContent     = data.nomor_hp;
-      document.getElementById('d-tamu').textContent   = data.jumlah_tamu + ' orang';
-      document.getElementById('d-tgl').textContent    = new Date(data.tanggal).toLocaleDateString();
-      document.getElementById('d-waktu').textContent  = data.waktu;
-      document.getElementById('d-bayar').textContent  = 'Rp ' + Number(data.total_bayar).toLocaleString() + ',-';
-      document.getElementById('d-status').textContent = data.status.charAt(0).toUpperCase() + data.status.slice(1);
-      modal.style.display = 'flex';
-    });
-  });
-
-  close.addEventListener('click', () => modal.style.display = 'none');
-});
-</script>
+@empty
+@endforelse
 @endsection

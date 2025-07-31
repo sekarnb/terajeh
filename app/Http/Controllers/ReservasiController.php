@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Reservasi;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ReservasiController extends Controller
 {
@@ -12,75 +14,84 @@ class ReservasiController extends Controller
      */
     public function index()
     {
-        // pakai paginate agar tampil pagination di view
-        $reservasis = Reservasi::latest()->paginate(10);
+        $reservasi = Reservasi::latest()->paginate(10);
 
-        return view('reservasi.index', compact('reservasis'));
+        return view('reservasi.index', [
+            'reservasi' => $reservasi,
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function update(Reservasi $reservasi, Request $request)
     {
-        // validasi sesuai nama kolom di DB dan view
-        $validated = $request->validate([
-            'nama_customer' => 'required|string|max:255',
-            'nomor_hp'      => 'required|integer|max:20',
-            'jumlah_tamu'   => 'required|integer|min:1',
-            'tanggal'       => 'required|date',
-            'waktu'         => 'required|string|max:10',
-            'total_bayar'   => 'required|integer|min:0',
-            'status'        => 'required|in:pending,selesai',
-            'bukti'         => 'nullable|image|mimes:jpg,png,jpeg,webp|max:2048',
+        $request->validate([
+            'status' => ['required'],
         ]);
 
-        // jika ada file bukti, simpan ke storage
-        if ($request->hasFile('bukti')) {
-            $path = $request->file('bukti')->store('bukti', 'public');
-            $validated['bukti'] = basename($path);
+        $reservasi->update([
+            'status' => $request->status,
+        ]);
+
+        return redirect()->back()->with('success', 'Status reservasi berhasil diperbarui.');
+    }
+
+    /**
+     * page for reservasi
+     */
+    public function reservasi()
+    {
+        return view('pages.reservasi');
+    }
+
+    public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'nama' => ['required', 'string', 'max:255'],
+            'no_hp' => ['required', 'string', 'max:20'],
+            'jumlah_tamu' => ['required', 'integer', 'min:1'],
+            'tanggal' => ['required', 'date', 'after_or_equal:'.now()->format('Y-m-d')],
+            'jam' => ['required', 'date_format:H:i', 'after_or_equal:'.now()->format('H:i')],
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('pages.reservasi')->withErrors($validator)->withInput();
         }
 
-        Reservasi::create($validated);
-
-        return redirect()
-            ->route('reservasi.index')
-            ->with('success', 'Reservasi berhasil ditambahkan.');
+        return redirect()->route('pages.order', [
+            'nama' => $request->nama,
+            'no_hp' => $request->no_hp,
+            'jumlah_tamu' => $request->jumlah_tamu,
+            'tanggal' => $request->tanggal,
+            'jam' => $request->jam,
+        ])->with('success', 'Reservasi berhasil dibuat.');
     }
 
     /**
-     * Display the specified resource as JSON (untuk modal detail).
+     * page for order
      */
-    public function show(string $id)
+    public function order(Request $request)
     {
-        $reservasi = Reservasi::findOrFail($id);
-        return response()->json($reservasi);
+        $categories = Category::query()->get();
+
+        return view('pages.order', [
+            'nama' => $request->nama,
+            'no_hp' => $request->no_hp,
+            'jumlah_tamu' => $request->jumlah_tamu,
+            'tanggal' => $request->tanggal,
+            'jam' => $request->jam,
+            'categories' => $categories,
+        ]);
     }
 
-    /**
-     * Mark booking as finished.
-     */
-    public function selesai(string $id)
+    public function checkout()
     {
-        $reservasi = Reservasi::findOrFail($id);
-        $reservasi->update(['status' => 'selesai']);
-
-        return redirect()
-            ->route('reservasi.index')
-            ->with('success', 'Reservasi berhasil diselesaikan.');
+        return view('pages.checkout');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-{
-    // cukup delete record, jangan hapus file bukti di storage
-    $reservasi = Reservasi::findOrFail($id);
-    $reservasi->delete();
-
-    return redirect()
-        ->route('reservasi.index')
-        ->with('success', 'Reservasi berhasil dihapus.');
-}
+    public function payment()
+    {
+        return view('pages.payment');
+    }
 }

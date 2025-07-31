@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Category;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -18,5 +19,16 @@ class DatabaseSeeder extends Seeder
             'username' => 'admin',
             'password' => Hash::make('password123')
         ]);
+
+        collect([
+            'Steak',
+            'Indonesian Food',
+            'Pasta and Snack',
+            'Cheese',
+            'Dessert',
+            'Drink',
+        ])->each(function (string $category) {
+            Category::create(['name' => $category]);
+        });
     }
 }

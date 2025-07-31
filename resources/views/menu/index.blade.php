@@ -1,267 +1,320 @@
-@extends('layouts.app')
+@extends('layouts.app', ['title' => 'Daftar Menu'])
 
 @section('content')
-  <!-- STYLE MODAL -->
-  <style>
-    #modal-menu {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.4);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-    }
-  </style>
-
-  <div class="content-body">
-    <div style="font-size:14px; color:#969BA0; margin-bottom:8px;">
-    Beranda / <span style="color:#464255; font-weight:600;">Daftar Menu</span>
-    </div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-      <h1>Menu</h1>
-      <button id="btn-tambah"
-              style="background:#2D3832;color:#fff;padding:8px 16px;border-radius:6px;border:none;">
-        + Tambah
-      </button>
-    </div>
-
-    <table style="width:100%;border-collapse:collapse;font-size:14px;">
-      <thead>
-        <tr style="background:#F5F5F5;">
-          <th style="padding:8px;border:1px solid #ddd;">No</th>
-          <th style="padding:8px;border:1px solid #ddd;">Foto</th>
-          <th style="padding:8px;border:1px solid #ddd;">Nama Menu</th>
-          <th style="padding:8px;border:1px solid #ddd;">Kategori</th>
-          <th style="padding:8px;border:1px solid #ddd;">Harga</th>
-          <th style="padding:8px;border:1px solid #ddd; max-width:220px; max-height:220px;">Deskripsi</th>
-          <th style="padding:8px;border:1px solid #ddd; text-align:right; width:80px;">Aksi</th>
-        </tr>
-      </thead>
-      <tbody>
-        @forelse($menus as $i => $menu)
-          <tr>
-            <td style="padding:8px;border:1px solid #ddd;">{{ $i+1 }}</td>
-            <td style="padding:8px;border:1px solid #ddd;">
-              <img src="{{ asset('storage/'.$menu->foto) }}"
-                   alt="" style="width:60px; height:60px; object-fit:cover; border-radius:4px;">
-            </td>
-            <td style="padding:8px;border:1px solid #ddd;">{{ $menu->nama_menu }}</td>
-            <td style="padding:8px;border:1px solid #ddd;">
-              {{ optional($menu->kategori)->nama_kategori }}
-            </td>
-            <td style="padding:8px;border:1px solid #ddd;">Rp {{ number_format($menu->harga, 0, ',', '.') }}</td>
-            <td style="padding:8px;border:1px solid #ddd; max-width:220px; width:220px; white-space:normal; word-break:break-word;">{{ $menu->deskripsi }}</td>
-            <td style="padding:8px;border:1px solid #ddd; text-align:center;">
-              <button class="btn-edit"
-                      data-id="{{ $menu->id }}"
-                      data-nama="{{ $menu->nama_menu }}"
-                      data-kategori-id="{{ $menu->kategori_id }}"
-                      data-harga="{{ $menu->harga }}"
-                      data-deskripsi="{{ $menu->deskripsi }}"
-                      style="background:none;border:none;cursor:pointer;margin-right:6px;">
-                <i class="fas fa-edit"></i>
-              </button>
-              <button class="btn-delete"
-                      data-id="{{ $menu->id }}"
-                      style="background:none;border:none;cursor:pointer;color:#d11a2a;">
-                <i class="fas fa-trash"></i>
-              </button>
-            </td>
-          </tr>
-        @empty
-          <tr>
-            <td colspan="7" style="text-align:center;padding:16px;">Belum ada data menu.</td>
-          </tr>
-        @endforelse
-      </tbody>
-    </table>
-  </div>
-
-  <!-- MODAL CREATE / EDIT -->
-  <div id="modal-menu">
-    <div style="background:#fff;border-radius:12px;width:400px;max-width:90%;padding:24px;position:relative;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-        <h2 id="modal-title">Tambah Menu</h2>
-        <button id="modal-close" style="background:none;border:none;font-size:24px;cursor:pointer">&times;</button>
-      </div>
-      <form id="form-menu" method="POST" enctype="multipart/form-data">
-        @csrf
-
-        <!-- Upload Foto -->
-        <div style="text-align:center;margin-bottom:16px;">
-          <label for="foto"
-                 style="display:inline-block;width:140px;height:140px;border:2px dashed #DDD;border-radius:8px;position:relative;cursor:pointer;">
-            <input type="file" id="foto" name="foto" accept="image/*"
-                   style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;">
-            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#555;">
-              <i class="fas fa-upload" style="font-size:24px;"></i><br>
-              <small>Upload Foto</small>
-            </div>
-          </label>
-          @error('foto')
-            <div class="text-red-600 text-sm">{{ $message }}</div>
-          @enderror
-        </div>
-
-        <!-- Fields -->
-        <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:16px;">
-          <div>
-            <label for="nama_menu">Nama Menu</label>
-            <input type="text" id="nama_menu" name="nama_menu" required
-                   style="width:100%;padding:8px;border:1px solid #BEC1BF;border-radius:6px;">
-          </div>
-          <div>
-            <label for="kategori_id">Kategori</label>
-            <select id="kategori_id" name="kategori_id" required
-                    style="width:100%;padding:8px;border:1px solid #BEC1BF;border-radius:6px;">
-              <option value="">-- Pilih --</option>
-              @foreach($kategoris as $kat)
-                <option value="{{ $kat->id }}">{{ $kat->nama_kategori }}</option>
-              @endforeach
-            </select>
-            @error('kategori_id')
-              <div class="text-red-600 text-sm">{{ $message }}</div>
-            @enderror
-          </div>
-          <div>
-            <label for="harga">Harga</label>
-            <input type="text" id="harga" name="harga" placeholder="0" required
-                   style="width:100%;padding:8px;border:1px solid #BEC1BF;border-radius:6px;">
-          </div>
-          <div>
-            <label for="deskripsi">Deskripsi</label>
-            <textarea id="deskripsi" name="deskripsi" rows="3" required
-                      style="width:100%;padding:8px;border:1px solid #BEC1BF;border-radius:6px;"></textarea>
-          </div>
-        </div>
-
-        <button type="submit"
-                style="width:100%;padding:10px;background:#2D3832;color:#fff;border:none;border-radius:6px;">
-          <span id="btn-simpan-text">Tambah</span>
+<div class="mt-12 p-4 border border-gray-300 rounded-xl">
+    <div class="flex justify-end">
+        <button onclick="document.getElementById('create-modal').classList.remove('hidden')" type="button" class="bg-secondary hover:bg-secondary-dark cursor-pointer text-white px-6 py-2 rounded-2xl transition-colors">
+            tambah
         </button>
-      </form>
     </div>
-  </div>
 
-  <!-- SWEETALERT2 & SCRIPT CRUD -->
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const modal        = document.getElementById('modal-menu');
-      const btnTambah    = document.getElementById('btn-tambah');
-      const btnClose     = document.getElementById('modal-close');
-      const form         = document.getElementById('form-menu');
-      const title        = document.getElementById('modal-title');
-      const btnText      = document.getElementById('btn-simpan-text');
-      const namaInput    = document.getElementById('nama_menu');
-      const kategoriSel  = document.getElementById('kategori_id');
-      const hargaInput   = document.getElementById('harga');
-      const deskripsiInp = document.getElementById('deskripsi');
+    <hr class="mt-4 mb-8 border-t border-gray-300" />
 
-      // OPEN CREATE
-      btnTambah.addEventListener('click', () => {
-        form.reset();
-        form.action         = "{{ route('menu.store') }}";
-        title.textContent   = 'Tambah Menu';
-        btnText.textContent = 'Tambah';
-        form.querySelector('input[name="_method"]')?.remove();
-        modal.style.display = 'flex';
-      });
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-500">
+            <thead>
+                <tr>
+                    <th class="px-6 py-3 text-left font-medium tracking-wider">No</th>
+                    <th class="px-6 py-3 text-left font-medium tracking-wider">Foto</th>
+                    <th class="px-6 py-3 text-left font-medium tracking-wider">Nama</th>
+                    <th class="px-6 py-3 text-left font-medium tracking-wider">Kategori</th>
+                    <th class="px-6 py-3 text-left font-medium tracking-wider">harga</th>
+                    <th class="px-6 py-3 text-left font-medium tracking-wider">Deskripsi</th>
+                    <th class="px-6 py-3 text-left font-medium tracking-wider">Aksi</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                @forelse ($menu as $m)
+                <tr>
+                    <td class="px-6 py-4 text-gray-500">
+                        {{ $menu->firstItem() + $loop->index }}
+                    </td>
+                    <td class="px-6 py-4 text-gray-500">
+                        <div class="w-14 h-14">
+                            <img class="rounded-md object-cover w-full h-full" src="{{ $m->foto() }}" alt="{{ $m->nama }}">
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 text-gray-500">
+                        {{ $m->nama }}
+                    </td>
+                    <td class="px-6 py-4 text-gray-500">
+                        {{ $m->category->name }}
+                    </td>
+                    <td class="px-6 py-4 text-gray-500">
+                        Rp. {{ number_format($m->harga, 2) }},-
+                    </td>
+                    <td class="px-6 py-4 text-gray-500">
+                        {{ str($m->deskripsi)->limit(20) }}
+                    </td>
+                    <td class="px-6 py-4 text-gray-500">
+                        <div class="flex items-center gap-2">
+                            <button onclick="document.getElementById('edit-modal-{{ $m->id }}').classList.remove('hidden')" type="button" class="text-gray-500 hover:text-gray-700 transition-colors cursor-pointer">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                                </svg>
+                            </button>
+                            <button onclick="document.getElementById('delete-modal-{{ $m->id }}').classList.remove('hidden')" type="button" class="text-red-500 hover:text-red-700 transition-colors cursor-pointer">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                </svg>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="7" class="px-6 py-4 text-center text-gray-500">Tidak ada menu ditemukan</td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
 
-      // OPEN EDIT
-      document.querySelectorAll('.btn-edit').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const id        = btn.dataset.id;
-          const nama      = btn.dataset.nama;
-          const kategori  = btn.dataset.kategoriId;
-          const harga     = btn.dataset.harga;
-          const deskripsi = btn.dataset.deskripsi;
+        <div class="mt-4">
+            {{ $menu->links() }}
+        </div>
+    </div>
+</div>
 
-          form.action         = `/menu/${id}`;
-          title.textContent   = 'Edit Menu';
-          btnText.textContent = 'Simpan';
-          namaInput.value     = nama;
-          kategoriSel.value   = kategori;
-          hargaInput.value    = formatRupiah(harga, '');
-          deskripsiInp.value  = deskripsi;
+{{-- create menu --}}
+<div id="create-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg p-6 w-full max-w-md">
+        <div class="flex items-center justify-between mb-4">
+            <div>
+                <h2 class="text-lg mb-2">Tambah Menu</h2>
+            </div>
+            <div onclick="document.getElementById('create-modal').classList.add('hidden')" class="cursor-pointer -mt-4 p-1 text-red-500 bg-red-200 rounded-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+            </div>
+        </div>
 
-          let methodInput = form.querySelector('input[name="_method"]');
-          if (!methodInput) {
-            methodInput = document.createElement('input');
-            methodInput.type  = 'hidden';
-            methodInput.name  = '_method';
-            form.appendChild(methodInput);
-          }
-          methodInput.value = 'PUT';
+        <form action="{{ route('menu.store') }}" method="post" enctype="multipart/form-data">
+            @csrf
 
-          modal.style.display = 'flex';
-        });
-      });
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Gambar Menu</label>
+                    <div class="mt-1 flex items-center">
+                        <label for="menuImage" class="flex justify-center cursor-pointer w-full border-2 border-dashed border-gray-300 rounded-lg p-8">
+                            <span id="imageContainer" class="w-32 h-28 rounded-lg flex items-center justify-center bg-gray-300">
+                                <svg id="uploadIcon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
+                                </svg>
+                                <img id="imagePreview" class="hidden w-full h-full object-contain" src="" alt="Preview">
+                            </span>
+                            <input id="menuImage" type="file" name="foto" accept="image/*" class="hidden">
+                        </label>
+                    </div>
+                    @error('foto')
+                    <span class="text-red-500 text-sm">{{ $message }}</span>
+                    @enderror
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Nama</label>
+                    <input type="text" name="nama" placeholder="Masukkan Menu" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg">
+                    @error('nama')
+                    <span class="text-red-500 text-sm">{{ $message }}</span>
+                    @enderror
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
+                    <select id="category" name="category_id" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg">
+                        <option selected disabled>Pilih Kategori</option>
+                        @forelse($categories as $category)
+                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        @empty
+                        <option disabled>Tidak ada kategori</option>
+                        @endforelse
+                    </select>
+                    @error('category_id')
+                    <span class="text-red-500 text-sm">{{ $message }}</span>
+                    @enderror
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Harga</label>
+                    <input type="number" name="harga" placeholder="0" min="1" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg">
+                    @error('harga')
+                    <span class="text-red-500 text-sm">{{ $message }}</span>
+                    @enderror
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
+                    <textarea name="deskripsi" placeholder="Tulis disini..." class="w-full px-3 py-2.5 border border-gray-200 rounded-lg h-24"></textarea>
+                    @error('deskripsi')
+                    <span class="text-red-500 text-sm">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="mt-6 flex gap-4">
+                <button onclick="document.getElementById('create-modal').classList.add('hidden')" type="button" class="w-full cursor-pointer border border-secondary text-secondary px-4 py-3 rounded-xl">Batal</button>
+                <button type="submit" class="w-full cursor-pointer bg-secondary hover:bg-secondary-dark text-white px-4 py-3 rounded-xl">Tambah</button>
+            </div>
+        </form>
+    </div>
+</div>
 
-      // CLOSE MODAL
-      btnClose.addEventListener('click', () => modal.style.display = 'none');
+{{-- edit menu --}}
+@forelse ($menu as $m)
+<div id="edit-modal-{{ $m->id }}" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg p-6 w-full max-w-md">
+        <div class="flex items-center justify-between mb-4">
+            <div>
+                <h2 class="text-lg mb-2">Edit Menu</h2>
+            </div>
+            <div onclick="document.getElementById('edit-modal-{{ $m->id }}').classList.add('hidden')" class="cursor-pointer -mt-4 p-1 text-red-500 bg-red-200 rounded-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+            </div>
+        </div>
 
-      // DELETE
-      document.querySelectorAll('.btn-delete').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const id = btn.dataset.id;
-          Swal.fire({
-            title: 'Yakin ingin dihapus?',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Hapus',
-            cancelButtonText: 'Batal',
-            confirmButtonColor: '#d11a2a',
-            cancelButtonColor: '#888'
-          }).then(res => {
-            if (res.isConfirmed) {
-              const delForm = document.createElement('form');
-              delForm.method = 'POST';
-              delForm.action = `/menu/${id}`;
-              delForm.innerHTML = `
-                @csrf
-                <input type="hidden" name="_method" value="DELETE">
-              `;
-              document.body.appendChild(delForm);
-              delForm.submit();
+        <form action="{{ route('menu.update', $m->id) }}" method="post" enctype="multipart/form-data">
+            @csrf
+            @method('put')
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Gambar Menu</label>
+                    <div class="mt-1 flex items-center">
+                        <label for="menuImageEdit-{{ $m->id }}" class="flex justify-center cursor-pointer w-full border-2 border-dashed border-gray-300 rounded-lg p-8">
+                            <span id="imageContainerEdit-{{ $m->id }}" class="w-32 h-28 rounded-lg flex items-center justify-center bg-gray-300">
+                                <svg id="uploadIconEdit-{{ $m->id }}" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
+                                </svg>
+                                <img id="imagePreviewEdit-{{ $m->id }}" class="hidden w-full h-full object-contain" src="{{ $m->foto() }}" alt="Preview">
+                            </span>
+                            <input id="menuImageEdit-{{ $m->id }}" type="file" name="foto" accept="image/*" class="hidden">
+                        </label>
+                        @error('foto')
+                        <span class="text-red-500 text-sm">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Nama</label>
+                    <input type="text" name="nama" value="{{ $m->nama }}" placeholder="Masukkan Menu" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg">
+                    @error('nama')
+                    <span class="text-red-500 text-sm">{{ $message }}</span>
+                    @enderror
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
+                    <select id="category" name="category_id" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg">
+                        <option selected disabled>Pilih Kategori</option>
+                        @forelse($categories as $category)
+                        <option @selected($m->category_id === $category->id) value="{{ $category->id }}">{{ $category->name }}</option>
+                        @empty
+                        <option disabled>Tidak ada kategori</option>
+                        @endforelse
+                    </select>
+                    @error('category_id')
+                    <span class="text-red-500 text-sm">{{ $message }}</span>
+                    @enderror
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Harga</label>
+                    <input type="number" name="harga" value="{{ $m->harga }}" placeholder="0" min="1" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg">
+                    @error('harga')
+                    <span class="text-red-500 text-sm">{{ $message }}</span>
+                    @enderror
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
+                    <textarea name="deskripsi" placeholder="Tulis disini..." class="w-full px-3 py-2.5 border border-gray-200 rounded-lg h-24">{{ $m->deskripsi }}</textarea>
+                    @error('deskripsi')
+                    <span class="text-red-500 text-sm">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="mt-6 flex gap-4">
+                <button onclick="document.getElementById('edit-modal-{{ $m->id }}').classList.add('hidden')" type="button" class="w-full cursor-pointer border border-secondary text-secondary px-4 py-3 rounded-xl">Batal</button>
+                <button type="submit" class="w-full cursor-pointer bg-secondary hover:bg-secondary-dark text-white px-4 py-3 rounded-xl">Simpan</button>
+            </div>
+        </form>
+    </div>
+</div>
+@empty
+@endforelse
+
+{{-- delete menu --}}
+@forelse ($menu as $m)
+<div id="delete-modal-{{ $m->id }}" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+    <div class="bg-white rounded-lg px-6 py-8 max-w-sm w-full">
+        <div class="text-lg flex items-center justify-center text-center mb-4">
+            Apakah Anda yakin ingin menghapusnya?
+        </div>
+        <form action="{{ route('menu.destroy', $m->id) }}" method="post">
+            @csrf
+            @method('delete')
+
+            <div class="mt-6 flex gap-4">
+                <button onclick="document.getElementById('delete-modal-{{ $m->id }}').classList.add('hidden')" type="button" class="w-full cursor-pointer border border-red-500 text-red-500 px-4 py-3 rounded-xl">Batal</button>
+                <button type="submit" class="w-full cursor-pointer bg-red-500 hover:bg-red-700 text-white px-4 py-3 rounded-xl">Hapus</button>
+            </div>
+        </form>
+    </div>
+</div>
+@empty
+@endforelse
+@endsection
+
+@push('scripts')
+<script>
+    const imageInput = document.getElementById('menuImage');
+    const imagePreview = document.getElementById('imagePreview');
+    const imageContainer = document.getElementById('imageContainer');
+    const uploadIcon = document.getElementById('uploadIcon');
+
+    imageInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+
+        if (file) {
+            const reader = new FileReader();
+
+            reader.onload = function(event) {
+                imagePreview.src = event.target.result;
+
+                imagePreview.classList.remove('hidden');
+                imageContainer.classList.remove('bg-gray-300');
+                uploadIcon.classList.add('hidden');
             }
-          });
-        });
-      });
 
-      // FORMAT RUPIAH ON INPUT
-      hargaInput.addEventListener('input', () => {
-        hargaInput.value = formatRupiah(hargaInput.value);
-        hargaInput.setSelectionRange(hargaInput.value.length, hargaInput.value.length);
-      });
-
-      // NOTIFIKASI SUKSES via Swal
-      @if(session('success'))
-        Swal.fire({
-          icon: 'success',
-          title: 'Berhasil',
-          text: '{{ session('success') }}',
-          showConfirmButton: false,
-          timer: 2000
-        });
-      @endif
+            reader.readAsDataURL(file);
+        } else {
+            uploadIcon.classList.remove('hidden');
+            imageContainer.classList.add('bg-gray-300');
+        }
     });
 
-    function formatRupiah(angka, prefix = 'Rp ') {
-      let numberString = angka.toString().replace(/[^,\d]/g, '');
-      const split = numberString.split(',');
-      let sisa = split[0].length % 3;
-      let rupiah = split[0].substr(0, sisa);
-      const ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-      if (ribuan) {
-        const sep = sisa ? '.' : '';
-        rupiah += sep + ribuan.join('.');
-      }
-      rupiah = split[1] !== undefined
-        ? rupiah + ',' + split[1]
-        : rupiah;
-      return prefix + rupiah;
-    }
-  </script>
-@endsection
+    @forelse($menu as $m)
+    imageInputEdit = document.getElementById('menuImageEdit-{{ $m->id }}');
+    imagePreviewEdit = document.getElementById('imagePreviewEdit-{{ $m->id }}');
+    imageContainerEdit = document.getElementById('imageContainerEdit-{{ $m->id }}');
+    uploadIconEdit = document.getElementById('uploadIconEdit-{{ $m->id }}');
+
+    imagePreviewEdit.src = '{{ $m->foto() }}';
+    imagePreviewEdit.classList.remove('hidden');
+    uploadIconEdit.classList.add('hidden');
+    imageContainerEdit.classList.remove('bg-gray-300');
+
+    imageInputEdit.addEventListener('change', function(e) {
+        file = e.target.files[0];
+        if (file) {
+            reader = new FileReader();
+
+            reader.onload = function(event) {
+                imagePreviewEdit.src = event.target.result;
+
+                imagePreviewEdit.classList.remove('hidden');
+                imageContainerEdit.classList.remove('bg-gray-300');
+                uploadIconEdit.classList.add('hidden');
+            }
+
+            reader.readAsDataURL(file);
+        }
+    });
+    @empty
+    @endforelse
+</script>
+@endpush

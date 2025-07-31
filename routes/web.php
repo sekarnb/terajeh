@@ -6,34 +6,42 @@ use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\ReservasiController;
 use App\Http\Controllers\LandingController;
-use App\Models\Menu;
 
-// Route::get('/', function () {
-//     return view('landing.index');
-// });
+// public routes
+Route::get('/', [LandingController::class, 'index'])->name('pages.index');
 
-Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
-Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/reservasi', [ReservasiController::class, 'reservasi'])->name('pages.reservasi');
+Route::post('/reservasi', [ReservasiController::class, 'store']);
+Route::get('/reservasi/order', [ReservasiController::class, 'order'])->name('pages.order');
+Route::get('/reservasi/checkout', [ReservasiController::class, 'checkout'])->name('pages.checkout');
+Route::get('/reservasi/payment', [ReservasiController::class, 'payment'])->name('pages.payment');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+// authentication routes
+Route::get('/login', [AuthController::class, 'index'])->name('login');
+Route::post('/login', [AuthController::class, 'store']);
+Route::post('/logout', [AuthController::class, 'destroy'])->name('logout');
+
+// admin panel routes
+Route::prefix('admin')->middleware('auth')->group(function () {
+    Route::get('/dashboard', fn () => view('dashboard'))->name('dashboard');
+
+    Route::prefix('kategori')->name('categories.')->controller(KategoriController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('store');
+        Route::put('/{category}', 'update')->name('update');
+        Route::delete('/{category}', 'destroy')->name('destroy');
+    });
+
+    Route::prefix('menu')->name('menu.')->controller(MenuController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('store');
+        Route::put('/{menu}', 'update')->name('update');
+        Route::delete('/{menu}', 'destroy')->name('destroy');
+    });
+
+    Route::prefix('reservasi')->name('reservasi.')->controller(ReservasiController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::put('/{reservasi}', 'update')->name('update');
+        Route::delete('/{reservasi}', 'destroy')->name('destroy');
+    });
 });
-
-Route::get('/kategori', [KategoriController::class, 'index'])->name('kategori.index');
-Route::post('/kategori', [KategoriController::class, 'store'])->name('kategori.store');
-Route::get('/kategori/{id}', [KategoriController::class, 'show'])->name('kategori.show');
-Route::put('/kategori/{id}', [KategoriController::class, 'update'])->name('kategori.update');
-Route::delete('/kategori/{id}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
-
-Route::resource('menu', MenuController::class);
-
-Route::get('/reservasi', [ReservasiController::class, 'index'])->name('reservasi.index');
-Route::post('/reservasi', [ReservasiController::class, 'store'])->name('reservasi.store');
-Route::get('/reservasi/{id}', [ReservasiController::class, 'show'])->name('reservasi.show');
-Route::put('/reservasi/{id}', [ReservasiController::class, 'update'])->name('reservasi.update');
-Route::delete('/reservasi/{id}', [ReservasiController::class, 'destroy'])->name('reservasi.destroy');
-
-Route::get('/', [LandingController::class, 'index'])->name('landing.index');
