@@ -14,7 +14,9 @@ Route::get('/reservasi', [ReservasiController::class, 'reservasi'])->name('pages
 Route::post('/reservasi', [ReservasiController::class, 'store']);
 Route::get('/reservasi/order', [ReservasiController::class, 'order'])->name('pages.order');
 Route::get('/reservasi/checkout', [ReservasiController::class, 'checkout'])->name('pages.checkout');
-Route::get('/reservasi/payment', [ReservasiController::class, 'payment'])->name('pages.payment');
+Route::post('/reservasi/checkout', [ReservasiController::class, 'invoicing']);
+Route::get('/reservasi/payment/{reservasi}', [ReservasiController::class, 'payment'])->name('pages.payment');
+Route::post("/reservasi/payment/{reservasi}", [ReservasiController::class, 'proof']);
 
 // authentication routes
 Route::get('/login', [AuthController::class, 'index'])->name('login');

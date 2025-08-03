@@ -42,7 +42,7 @@ class MenuController extends Controller
     {
         $validated = $request->validate([
             'category_id' => ['required', 'integer', 'exists:categories,id'],
-            'foto'        => ['required', 'image', 'mimes:jpg,jpeg,png,svg', 'max:2048'],
+            'foto'        => ['image', 'mimes:jpg,jpeg,png,svg', 'max:2048'],
             'nama'        => ['required', 'string', 'max:255'],
             'harga'       => ['required', 'integer', 'min:0'],
             'deskripsi'   => ['required', 'string', 'max:255'],

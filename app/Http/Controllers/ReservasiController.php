@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ReservasiStatus;
 use App\Models\Category;
+use App\Models\Order;
 use App\Models\Reservasi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -52,7 +54,7 @@ class ReservasiController extends Controller
             'no_hp' => ['required', 'string', 'max:20'],
             'jumlah_tamu' => ['required', 'integer', 'min:1'],
             'tanggal' => ['required', 'date', 'after_or_equal:'.now()->format('Y-m-d')],
-            'jam' => ['required', 'date_format:H:i', 'after_or_equal:'.now()->format('H:i')],
+            'jam' => ['required', 'date_format:H:i'],
         ]);
 
         if ($validator->fails()) {
@@ -85,13 +87,94 @@ class ReservasiController extends Controller
         ]);
     }
 
-    public function checkout()
+    public function checkout(Request $request)
     {
-        return view('pages.checkout');
+        (array) $orderItems = $request->query('cart');
+
+        if (!$orderItems) {
+            return redirect()->route('pages.order')->with('error', 'No items in cart.');
+        }
+
+        // query the menu data from the order items
+        (array) $menuItems = [];
+        foreach ($orderItems as $item) {
+            $menuItem = \App\Models\Menu::find($item['id']);
+
+            if ($menuItem) {
+                $menuItems[] = [
+                    'id' => $menuItem->id,
+                    'name' => $menuItem->nama,
+                    'price' => $menuItem->harga,
+                    'notes' => $item['notes'],
+                    'quantity' => $item['quantity'],
+                    'total' => $menuItem->harga * $item['quantity'],
+                ];
+            }
+        }
+
+        $totalPrice = array_reduce($menuItems, fn ($carry, $item) => $carry + $item['total'], 0);
+
+        return view('pages.checkout', [
+            'menuItems' => $menuItems,
+            'totalPrice' => $totalPrice,
+        ]);
     }
 
-    public function payment()
+    public function invoicing(Request $request)
     {
-        return view('pages.payment');
+        $data = $request->validate([
+            'nama' => ['required', 'string', 'max:255'],
+            'no_hp' => ['required', 'string', 'max:20'],
+            'jumlah_tamu' => ['required', 'integer', 'min:1'],
+            'tanggal' => ['required', 'date', 'after_or_equal:'.now()->format('Y-m-d')],
+            'jam' => ['required', 'date_format:H:i'],
+            'menuItems' => ['required'],
+        ]);
+
+        $menuItems = json_decode($data['menuItems'], true);
+
+        $reservasi = Reservasi::create([
+            'nama_customer' => $data['nama'],
+            'no_hp' => $data['no_hp'],
+            'jumlah_tamu' => $data['jumlah_tamu'],
+            'tanggal' => $data['tanggal'],
+            'jam' => $data['jam'],
+            'total_bayar' => array_reduce($menuItems, fn ($carry, $item) => $carry + ($item['price'] * $item['quantity']), 0),
+            'status' => ReservasiStatus::PENDING,
+        ]);
+
+        foreach ($menuItems as $item) {
+            Order::create([
+                'reservasi_id' => $reservasi->id,
+                'menu_id' => $item['id'],
+                'jumlah' => $item['quantity'],
+                'notes' => $item['notes'] ?? null,
+            ]);
+        }
+
+        return redirect()->route('pages.payment', $reservasi->id)->with('success', 'Reservasi dan pesanan berhasil dibuat. Silakan unggah bukti pembayaran.');
+    }
+
+    public function payment(Reservasi $reservasi)
+    {
+        return view('pages.payment', [
+            'reservasi' => $reservasi,
+        ]);
+    }
+
+    public function proof(Reservasi $reservasi, Request $request)
+    {
+        $request->validate([
+            'bukti_bayar' => ['required', 'image', 'max:2048'],
+        ]);
+
+        $path = $request->file('bukti_bayar')->store('bukti_bayar');
+
+        $reservasi->update([
+            'bukti_bayar' => $path,
+            'status' => ReservasiStatus::PENDING,
+        ]);
+
+        return redirect()->back()->with('success', 'Bukti pembayaran berhasil diunggah.');
     }
 }

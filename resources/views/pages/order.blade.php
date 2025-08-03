@@ -1,11 +1,11 @@
 @extends('layouts.main', ['title' => 'Reservasi'])
 
 @section('content')
-<div class="flex flex-col items-center justify-center text-primary bg-secondary">
-    <h1 class="text-6xl leading-loose tracking-wider py-6">Reservasi</h1>
+<div class="mt-32 lg:mt-0 flex flex-col items-center justify-center text-primary bg-secondary">
+    <h1 class="text-4xl lg:text-6xl leading-loose tracking-wider py-6">Reservasi</h1>
 
     <div class="w-full py-8 border-t-2 border-white">
-        <div class="flex items-center justify-center gap-4 text-primary">
+        <div class="flex lg:flex-row flex-col items-center justify-center gap-4 text-primary">
             <span class="text-xl">{{ $nama }}</span>
             <span>
                 <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -35,18 +35,18 @@
     </div>
 </div>
 
-<div class="mt-8 max-w-6xl mx-auto">
-    <a href="{{ route('pages.reservasi') }}" class="border border-secondary px-16 py-2">Kembali</a>
+<div class="mt-8 container-default flex justify-center lg:flex-none">
+    <a href="{{ url()->previous() }}" class="border border-secondary px-16 py-2">Kembali</a>
 </div>
 
-<div class="mt-32 max-w-6xl mx-auto">
-    <div class="flex flex-col items-center gap-6">
-        <span class="text-amber-950 text-4xl font-bold">Silahkan pilih menu pesanan Anda</span>
+<div class="mt-32 container-default">
+    <div class="flex flex-col items-center gap-6 text-center lg:text-left">
+        <span class="text-amber-950 text-2xl lg:text-4xl font-bold">Silahkan pilih menu pesanan Anda</span>
     </div>
 
-    <div class="mt-16 flex items-center justify-between text-secondary">
+    <div class="mt-16 flex lg:flex-row flex-col gap-6 items-center justify-between text-secondary">
         @forelse ($categories as $category)
-        <span data-tab="tab{{ $loop->iteration }}" class="tab-button text-2xl font-bold">{{ $category->name }}</span>
+        <span data-tab="tab{{ $loop->iteration }}" class="tab-button text-xl lg:text-2xl font-bold">{{ $category->name }}</span>
         @empty
         <span class="text-2xl">Tidak ada kategori menu</span>
         @endforelse
@@ -55,9 +55,9 @@
     <hr class="mt-8 border-t-2 border-secondary" />
 
     @forelse ($categories as $category)
-    <div id="tab{{ $loop->iteration }}-content" class="tab-panel mt-20 w-full grid grid-cols-4 place-content-between gap-8">
+    <div id="tab{{ $loop->iteration }}-content" class="tab-panel mt-20 w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 place-content-between gap-8">
         @forelse ($category->menus as $menu)
-        <div class="w-full h-fit" onclick="openOrderModal('item{{ $loop->iteration }}', {
+        <div class="w-full h-fit hover:scale-105 transition duration-300 ease-in-out cursor-pointer" onclick="openOrderModal('item{{ $menu->id }}', {
                 menuId: '{{ $menu->id }}',
                 image: '{{ $menu->foto() }}',
                 title: '{{ $menu->name }}',
@@ -86,16 +86,16 @@
     @endforelse
 </div>
 
-<a href="{{ route('pages.checkout') }}" class="mt-32 -mb-32 bg-green-700 hover:bg-green-600 transition-colors w-full px-16 py-6 text-white flex justify-between items-center">
+<button id="cart-items-checkout" type="button" class="mt-32 -mb-36 lg:-mb-32 bg-green-700 hover:bg-green-600 transition-colors w-full px-16 py-6 text-white flex justify-between items-center">
     <span class="text-3xl">
-        Checkout (2)
+        Checkout (<span id="cart-items-count">0</span>)
     </span>
     <span class="text-3xl">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-8">
             <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
         </svg>
     </span>
-</a>
+</button>
 
 {{-- modal add menu --}}
 <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 hidden" id="modal-container">
@@ -114,6 +114,11 @@
                 <p class="text-2xl font-bold" id="modal-title"></p>
                 <p class="text-xl" id="modal-price"></p>
                 <p class="text-sm" id="modal-description"></p>
+            </div>
+
+            <div class="px-6 py-4">
+                <label for="notes" class="text-sm">Catatan</label>
+                <textarea id="notes" name="notes" class="w-full h-24 border border-secondary p-2 text-sm" placeholder="Tambahkan catatan khusus untuk pesanan ini..."></textarea>
             </div>
 
             <div class="mt-6 px-6 py-4 flex items-center justify-evenly gap-4">
@@ -137,16 +142,6 @@
         </div>
     </div>
 </template>
-
-<!-- Cart display (optional) -->
-<div id="cart-summary" class="fixed bottom-4 right-4 bg-white p-4 rounded-lg shadow-lg hidden">
-    <h3 class="font-bold mb-2">Your Cart</h3>
-    <div id="cart-items"></div>
-    <div class="mt-3 font-bold" id="cart-total">Total: Rp. 0</div>
-    <button id="checkout-btn" class="mt-3 w-full bg-green-500 text-white py-2 rounded hover:bg-green-600">
-        Checkout
-    </button>
-</div>
 @endsection
 
 @push('scripts')
@@ -158,6 +153,7 @@
 
         // Store quantity for each item
         const itemQuantities = {};
+        const cartItems = {};
 
         // Function to open modal for a specific item
         window.openOrderModal = function(itemId, itemData) {
@@ -172,7 +168,7 @@
 
             // Initialize quantity if not exists
             if (!itemQuantities[itemId]) {
-                itemQuantities[itemId] = 0;
+                itemQuantities[itemId] = 1;
             }
 
             // Set initial quantity
@@ -193,10 +189,29 @@
             });
 
             modalContent.querySelector('.add-to-cart-btn').addEventListener('click', () => {
-                // Add to cart logic here
                 console.log(`Added ${itemQuantities[itemId]} of ${itemData.title} to cart`);
-                // You might want to reset quantity after adding to cart
-                // itemQuantities[itemId] = 0;
+
+                // Add item to cart, if quantity is greater than 0, and if the user select another item, append it to the cart
+                if (itemQuantities[itemId] > 0) {
+                    cartItems[itemId] = {
+                        menuId: itemData.menuId,
+                        name: itemData.title,
+                        price: parseInt(itemData.price.replace(/[^0-9]/g, '')),
+                        quantity: itemQuantities[itemId],
+                        notes: document.getElementById('notes').value,
+                        total: parseInt(itemData.price.replace(/[^0-9]/g, '')) * itemQuantities[itemId]
+                    };
+                } else {
+                    delete cartItems[itemId]; // Remove item if quantity is 0
+                }
+
+                // Update cart items count
+                const cartItemsCount = Object.values(cartItems).reduce((total, item) => total + item.quantity, 0);
+                document.getElementById('cart-items-count').textContent = cartItemsCount;
+
+                // reset quantity after adding to cart
+                itemQuantities[itemId] = 0;
+
                 modalContainer.classList.add('hidden');
             });
 
@@ -210,6 +225,26 @@
 
             // Show modal
             modalContainer.classList.remove('hidden');
+
+            document.getElementById('cart-items-checkout').addEventListener('click', (e) => {
+                e.preventDefault();
+
+                // get current url query parameters
+                const queryParams = new URLSearchParams(window.location.search);
+
+                // add cart items to query parameters and append the data if the user select more than one item
+                Object.keys(cartItems).forEach(itemId => {
+                    const item = cartItems[itemId];
+                    queryParams.append(`cart[${itemId}][id]`, item.menuId);
+                    queryParams.append(`cart[${itemId}][quantity]`, item.quantity);
+                    queryParams.append(`cart[${itemId}][name]`, item.name);
+                    queryParams.append(`cart[${itemId}][price]`, item.price);
+                    queryParams.append(`cart[${itemId}][notes]`, item.notes);
+                    queryParams.append(`cart[${itemId}][total]`, item.total);
+                });
+
+                window.location.href = "{{ route('pages.checkout') }}?" + queryParams.toString();
+            });
         };
 
         // Close modal when clicking outside
@@ -261,6 +296,5 @@
             activateTab(tabButtons[0].dataset.tab);
         }
     });
-
 </script>
 @endpush

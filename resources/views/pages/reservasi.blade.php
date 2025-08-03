@@ -1,17 +1,17 @@
 @extends('layouts.main', ['title' => 'Reservasi'])
 
 @section('content')
-<div class="flex justify-center text-white bg-secondary">
-    <h1 class="text-6xl leading-loose tracking-wider py-6">Reservasi</h1>
+<div class="mt-32 lg:mt-0 flex justify-center text-white bg-secondary">
+    <h1 class="text-4xl lg:text-6xl leading-loose tracking-wider py-6">Reservasi</h1>
 </div>
 
-<div class="mt-32 max-w-6xl mx-auto">
+<div class="mt-32 container-default">
     <div class="flex flex-col items-center gap-6">
-        <span class="text-amber-950 text-4xl font-bold">Syarat dan Ketentuan Reservasi</span>
-        <span class="text-xl text-amber-950/75">Berikut adalah ketentuan penting yang perlu diperhatikan sebelum melakukan reservasi</span>
+        <span class="text-amber-950 text-2xl lg:text-4xl font-bold">Syarat dan Ketentuan Reservasi</span>
+        <span class="text-base lg:text-xl text-amber-950/75">Berikut adalah ketentuan penting yang perlu diperhatikan sebelum melakukan reservasi</span>
     </div>
 
-    <div class="mt-8 grid grid-cols-3 gap-4 ">
+    <div class="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-4 ">
         <div class="flex flex-col items-start gap-4 p-6 bg-white border border-secondary">
             <div>
                 <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -54,32 +54,32 @@
     </div>
 </div>
 
-<div class="mt-32 max-w-6xl mx-auto">
+<div class="mt-32 container-default">
     <div class="flex flex-col items-center gap-6">
-        <span class="text-amber-950 text-4xl font-bold">Amankan Tempat Anda Sekarang!</span>
-        <span class="text-xl text-amber-950/75">Nikmati kepastian dan kenyamanan di tempat favorit</span>
+        <span class="text-amber-950 text-2xl lg:text-4xl font-bold">Amankan Tempat Anda Sekarang!</span>
+        <span class="text-base lg:text-xl text-amber-950/75">Nikmati kepastian dan kenyamanan di tempat favorit</span>
     </div>
 
-    <form action="{{ route('pages.reservasi') }}" method="post" class="mt-8 flex flex-col items-center justify-center w-1/2 gap-6 mx-auto">
+    <form action="{{ route('pages.reservasi') }}" method="post" class="mt-8 flex flex-col items-center justify-center lg:w-1/2 gap-6 mx-auto">
         @csrf
 
         <div class="w-full flex flex-col items-start gap-2">
             <label for="nama" class="font-medium text-amber-950">Nama</label>
-            <input type="text" id="nama" name="nama" placeholder="Masukan Nama Anda" class="w-full border bg-white border-none px-3 py-2.5" />
+            <input type="text" id="nama" name="nama" value="{{ old('nama') ?? request('nama') }}" placeholder="Masukan Nama Anda" class="w-full border bg-white border-none px-3 py-2.5" />
             @error('nama')
                 <span class="text-red-500 text-sm">{{ $message }}</span>
             @enderror
         </div>
         <div class="w-full flex flex-col items-start gap-2">
             <label for="no_hp" class="font-medium text-amber-950">No. HP</label>
-            <input type="number" id="no_hp" name="no_hp" placeholder="Masukan No. HP Anda" class="w-full border bg-white border-none px-3 py-2.5" />
+            <input type="number" id="no_hp" name="no_hp" value="{{ old('no_hp') ?? request('no_hp') }}" placeholder="Masukan No. HP Anda" class="w-full border bg-white border-none px-3 py-2.5" />
             @error('no_hp')
                 <span class="text-red-500 text-sm">{{ $message }}</span>
             @enderror
         </div>
         <div class="w-full flex flex-col items-start gap-2">
             <label for="jumlah_tamu" class="font-medium text-amber-950">Jumlah Tamu</label>
-            <input type="number" id="jumlah_tamu" name="jumlah_tamu" placeholder="Masukan Jumlah Tamu" class="w-full border bg-white border-none px-3 py-2.5" />
+            <input type="number" id="jumlah_tamu" name="jumlah_tamu" value="{{ old('jumlah_tamu') ?? request('jumlah_tamu') }}" placeholder="Masukan Jumlah Tamu" class="w-full border bg-white border-none px-3 py-2.5" />
             @error('jumlah_tamu')
                 <span class="text-red-500 text-sm">{{ $message }}</span>
             @enderror
@@ -87,14 +87,14 @@
         <div class="w-full flex justify-between gap-6">
             <div class="w-full flex flex-col items-start gap-2">
                 <label for="tanggal" class="font-medium text-amber-950">Hari/Tanggal</label>
-                <input type="date" id="tanggal" name="tanggal" class="w-full border bg-white border-none px-3 py-2.5" />
+                <input type="date" id="tanggal" name="tanggal" value="{{ \Carbon\Carbon::parse(old('tanggal'))->format('Y-m-d') ?? \Carbon\Carbon::parse(request('tanggal'))->format('Y-m-d') }}" class="w-full border bg-white border-none px-3 py-2.5" />
                 @error('tanggal')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
             </div>
             <div class="w-full flex flex-col items-start gap-2">
                 <label for="jam" class="font-medium text-amber-950">Jam</label>
-                <input type="time" id="jam" name="jam" class="w-full border bg-white border-none px-3 py-2.5" />
+                <input type="time" id="jam" name="jam" value="{{ \Carbon\Carbon::parse(old('jam'))->format('H:i') ?? \Carbon\Carbon::parse(request('jam'))->format('H:i') }}" class="w-full border bg-white border-none px-3 py-2.5" />
                 @error('jam')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror

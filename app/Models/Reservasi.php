@@ -24,13 +24,13 @@ class Reservasi extends Model
 
     protected $casts = [
         'tanggal' => 'date',
-        'jam' => 'time',
+        'jam' => 'datetime:H:i',
         'status' => ReservasiStatus::class,
     ];
 
     public function orders()
     {
-        return $this->belongsToMany(Order::class, 'orders', 'reservasi_id', 'product_id')
+        return $this->belongsToMany(Order::class, 'orders', 'reservasi_id', 'menu_id')
                     ->withPivot('jumlah')
                     ->withTimestamps();
     }

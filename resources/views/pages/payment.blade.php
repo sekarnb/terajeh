@@ -9,9 +9,15 @@
     <a href="{{ route('pages.reservasi') }}" class="border border-secondary px-16 py-2">Kembali</a>
 
     <div class="mt-8 flex flex-col items-center justify-center w-1/2 gap-6 mx-auto">
+        @if(session('success'))
+        <div class="mt-4 text-green-700 bg-green-100 p-4">
+            {{ session('success') }}
+        </div>
+        @endif
+
         <span class="text-amber-950 text-4xl font-bold">Konfirmasi Pembayaran</span>
 
-        <span class="text-amber-950 text-2xl">Total Pembayaran: Rp. 200.000</span>
+        <span class="text-amber-950 text-2xl">Total Pembayaran: Rp. {{ number_format($reservasi->total_bayar, 0, ',', '.') }}</span>
 
         <div class="mt-8 w-full flex justify-center">
             <svg width="296" height="296" viewBox="0 0 296 296" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -30,13 +36,18 @@
             lalu upload bukti transfer di bawah ini.
         </div>
 
-        <div class="mt-8 w-full">
-            <input type="file" class="bg-white p-2 w-full" accept="image/*">
-        </div>
+        <form action="{{ route('pages.payment', $reservasi->id) }}" method="post" enctype="multipart/form-data">
+            @csrf
 
-        <div class="mt-8 w-full">
-            <button type="button" class="w-full bg-secondary text-white py-2 text-xl tracking-wider">Kirim</button>
-        </div>
+            <div class="mt-8 w-full">
+                <input type="file" name="bukti_bayar" class="bg-white p-2 w-full" accept="image/*" required>
+                <small class="text-xs text-secondary italic">max 2mb</small>
+            </div>
+
+            <div class="mt-8 w-full">
+                <button type="submit" class="w-full bg-secondary text-white py-2 text-xl tracking-wider">Kirim</button>
+            </div>
+        </form>
     </div>
 </div>
 @endsection

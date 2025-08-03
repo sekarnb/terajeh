@@ -8,7 +8,7 @@ class Order extends Model
 {
     protected $fillable = [
         'reservasi_id',
-        'product_id',
+        'menu_id',
         'jumlah',
         'notes',
     ];

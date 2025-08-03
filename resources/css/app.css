@@ -17,3 +17,7 @@
     --color-secondary: #2D3832;
     --color-secondary-dark: #1F2620;
 }
+
+@utility container-default {
+    @apply px-8 md:px-0 max-w-2xl md:max-w-3xl lg:max-w-5xl xl:max-w-6xl mx-auto;
+}
