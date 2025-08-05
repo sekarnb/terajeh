@@ -32,12 +32,16 @@
                         <col class="sm:w-1/6">
                         <col class="sm:w-1/6">
                         <col class="sm:w-1/6">
+                        <col class="sm:w-1/6">
+                        <col class="sm:w-1/6">
                     </colgroup>
                     <thead>
                         <tr>
-                            <th class="text-left py-4 text-secondary/50">Menu yang Dipesan</th>
+                            <th class="text-left py-4 text-secondary/50">No.</th>
+                            <th class="text-left py-4 text-secondary/50">Menu</th>
                             <th class="text-right py-4 text-secondary/50">Harga</th>
                             <th class="text-right py-4 text-secondary/50">Jumlah</th>
+                            <th class="text-right py-4 text-secondary/50">Keterangan</th>
                             <th class="text-right py-4 text-secondary/50">Subtotal</th>
                         </tr>
                     </thead>
@@ -45,14 +49,11 @@
                     <tbody id="order-items">
                         @forelse($reservasi->orders as $order)
                             <tr>
-                                <td class="py-6">
-                                    <div class="flex flex-col">
-                                        <span class="text-lg">{{ $order->menu->nama }}</span>
-                                        <span class="text-sm italic text-secondary/80">{{ $order->notes }}</span>
-                                    </div>
-                                </td>
+                                <td class="py-6">{{ $loop->iteration }}</td>
+                                <td class="py-6">{{ $order->menu->nama }}</td>
                                 <td class="py-6 text-right">Rp. {{ number_format($order->menu->harga, 0, ',', '.') }}</td>
-                                <td class="py-6 text-right">{{ $order->jumlah }}x</td>
+                                <td class="py-6 text-right">{{ $order->jumlah }}</td>
+                                <td class="py-6 text-right">{{ $order->notes ?? '-' }}</td>
                                 <td class="py-6 text-right">Rp. {{ number_format($order->menu->harga * $order->jumlah, 0, ',', '.') }}</td>
                             </tr>
                         @empty
@@ -64,8 +65,8 @@
 
                     <tfoot>
                         <tr>
-                            <th scope="row" colspan="3" class="font-bold pt-6 text-right text-amber-950">Total</th>
-                            <td class="pt-6 text-right sm:pr-0">Rp. {{ number_format($totalPrice, 0, ',', '.') }}</td>
+                            <th scope="row" colspan="4" class="font-bold pt-8 text-right text-amber-950">Total</th>
+                            <td class="pt-8 text-right" colspan="2">Rp. {{ number_format($totalPrice, 0, ',', '.') }}</td>
                         </tr>
                     </tfoot>
                 </table>
