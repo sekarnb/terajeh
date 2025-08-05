@@ -12,4 +12,9 @@ class Order extends Model
         'jumlah',
         'notes',
     ];
+
+    public function menu()
+    {
+        return $this->belongsTo(Menu::class);
+    }
 }

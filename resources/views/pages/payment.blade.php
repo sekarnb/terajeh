@@ -1,23 +1,31 @@
 @extends('layouts.main', ['title' => 'Reservasi'])
 
 @section('content')
-<div class="flex flex-col items-center justify-center text-primary bg-secondary">
-    <h1 class="text-6xl leading-loose tracking-wider py-6">Reservasi</h1>
+<div class="mt-32 lg:mt-0 flex flex-col items-center justify-center text-primary bg-secondary">
+    <h1 class="text-4xl lg:text-6xl leading-loose tracking-wider py-6">Reservasi</h1>
 </div>
 
-<div class="mt-8 max-w-6xl mx-auto">
-    <a href="{{ route('pages.reservasi') }}" class="border border-secondary px-16 py-2">Kembali</a>
+<div class="mt-8 container-default flex justify-center lg:flex-none">
+    <a href="{{ route('pages.order', request()->all()) }}" class="border border-secondary px-16 py-2">Kembali</a>
+</div>
 
-    <div class="mt-8 flex flex-col items-center justify-center w-1/2 gap-6 mx-auto">
+<div class="mt-8 container-default flex justify-center lg:flex-none">
+    <div class="mt-8 flex flex-col items-center justify-center lg:w-1/2 gap-6 mx-auto">
         @if(session('success'))
-        <div class="mt-4 text-green-700 bg-green-100 p-4">
+        <div class="w-full mt-4 text-green-700 bg-green-100 p-4">
             {{ session('success') }}
         </div>
         @endif
 
-        <span class="text-amber-950 text-4xl font-bold">Konfirmasi Pembayaran</span>
+        @if($errors->any())
+        <div class="w-full mt-4 text-red-700 bg-red-100 p-4">
+            {{ $errors->first() }}
+        </div>
+        @endif
 
-        <span class="text-amber-950 text-2xl">Total Pembayaran: Rp. {{ number_format($reservasi->total_bayar, 0, ',', '.') }}</span>
+        <span class="text-amber-950 text-2xl lg:text-4xl font-bold">Konfirmasi Pembayaran</span>
+
+        <span class="text-amber-950 text-lg lg:text-2xl">Total Pembayaran: Rp. {{ number_format($reservasi->total_bayar, 0, ',', '.') }}</span>
 
         <div class="mt-8 w-full flex justify-center">
             <svg width="296" height="296" viewBox="0 0 296 296" fill="none" xmlns="http://www.w3.org/2000/svg">

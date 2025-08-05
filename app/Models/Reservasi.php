@@ -30,9 +30,7 @@ class Reservasi extends Model
 
     public function orders()
     {
-        return $this->belongsToMany(Order::class, 'orders', 'reservasi_id', 'menu_id')
-                    ->withPivot('jumlah')
-                    ->withTimestamps();
+        return $this->hasMany(Order::class, 'reservasi_id');
     }
 
     /**

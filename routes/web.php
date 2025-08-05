@@ -43,6 +43,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 
     Route::prefix('reservasi')->name('reservasi.')->controller(ReservasiController::class)->group(function () {
         Route::get('/', 'index')->name('index');
+        Route::get('/{reservasi}', 'show')->name('show');
         Route::put('/{reservasi}', 'update')->name('update');
         Route::delete('/{reservasi}', 'destroy')->name('destroy');
     });

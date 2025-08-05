@@ -24,6 +24,19 @@ class ReservasiController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     */
+    public function show(Reservasi $reservasi)
+    {
+        $totalPrice = $reservasi->orders->sum(fn ($order) => $order->menu->harga * $order->jumlah);
+
+        return view('reservasi.show', [
+            'reservasi' => $reservasi->load(['orders.menu']),
+            'totalPrice' => $totalPrice,
+        ]);
+    }
+
+    /**
      * Store a newly created resource in storage.
      */
     public function update(Reservasi $reservasi, Request $request)

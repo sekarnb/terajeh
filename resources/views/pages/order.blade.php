@@ -36,7 +36,13 @@
 </div>
 
 <div class="mt-8 container-default flex justify-center lg:flex-none">
-    <a href="{{ url()->previous() }}" class="border border-secondary px-16 py-2">Kembali</a>
+    <a href="{{ route('pages.reservasi', [
+        'nama' => request('nama'),
+        'no_hp' => request('no_hp'),
+        'jumlah_tamu' => request('jumlah_tamu'),
+        'tanggal' => request('tanggal'),
+        'jam' => request('jam'),
+    ]) }}" class="border border-secondary px-16 py-2">Kembali</a>
 </div>
 
 <div class="mt-32 container-default">

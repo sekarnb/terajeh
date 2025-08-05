@@ -53,7 +53,8 @@
                 <div class="flex items-center justify-between">
                     <h2 class="text-4xl capitalize">{{ $title }}</h2>
                     <div class="flex items-center gap-2">
-                        <a href="{{ route('dashboard') }}" class="text-gray-500/40">dashboard</a>
+                        <a href="{{ route('dashboard') }}" class="text-secondary/50">dashboard</a>
+                        @isset($breadcrumb) / <span class="lowercase text-secondary/50">{{ $breadcrumb ?? '' }}</span> @endisset
                         /
                         <span class="lowercase">{{ $title }}</span>
                     </div>
