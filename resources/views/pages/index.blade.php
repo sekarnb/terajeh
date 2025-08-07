@@ -72,7 +72,7 @@
             </div>
 
             <div class="mt-4 text-2xl text-secondary">
-                <p class="line-clamp-1">{{ $menu->name }}</p>
+                <p class="line-clamp-1">{{ $menu->nama }}</p>
                 <p class="">Rp. {{ number_format($menu->harga, 0, ',', '.') }}</p>
             </div>
         </div>
