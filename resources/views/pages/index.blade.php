@@ -178,11 +178,11 @@
     </div>
 
     <div class="mt-16 w-fit mx-auto space-y-16 lg:space-y-8">
-        <div class="flex lg:flex-row flex-col items-center justify-between gap-0 lg:gap-28">
+        <div class="flex lg:flex-row flex-col items-center justify-start gap-0 lg:gap-28">
             <span class="text-2xl lg:text-4xl">11.00 - 21.00</span>
             <span class="text-2xl lg:text-4xl">Minggu - Jumat</span>
         </div>
-        <div class="flex lg:flex-row flex-col items-center justify-between gap-0 lg:gap-28">
+        <div class="flex lg:flex-row flex-col items-center justify-start gap-0 lg:gap-28">
             <span class="text-2xl lg:text-4xl">11.00 - 22.00</span>
             <span class="text-2xl lg:text-4xl">Sabtu</span>
         </div>

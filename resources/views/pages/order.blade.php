@@ -66,7 +66,7 @@
         <div class="w-full h-fit hover:scale-105 transition duration-300 ease-in-out cursor-pointer" onclick="openOrderModal('item{{ $menu->id }}', {
                 menuId: '{{ $menu->id }}',
                 image: '{{ $menu->foto() }}',
-                title: '{{ $menu->name }}',
+                title: '{{ $menu->nama }}',
                 price: 'Rp. {{ number_format($menu->harga, 0, ',', '.') }}',
                 description: '{{ $menu->deskripsi }}'
             })">
@@ -75,7 +75,7 @@
             </div>
 
             <div class="mt-4 text-2xl text-secondary">
-                <p class="line-clamp-1">{{ $menu->name }}</p>
+                <p class="line-clamp-1">{{ $menu->nama }}</p>
                 <p class="">Rp. {{ number_format($menu->harga, 0, ',', '.') }}</p>
             </div>
         </div>
