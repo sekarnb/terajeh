@@ -112,17 +112,17 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Nama</label>
-                    <input type="text" name="nama" placeholder="Masukkan Menu" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg">
+                    <input type="text" name="nama" placeholder="Masukkan Menu" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg active:border-secondary focus:outline-none focus:ring-2 focus:ring-secondary">
                     @error('nama')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
                     @enderror
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
-                    <select id="category" name="category_id" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg">
+                    <select id="category" name="category_id" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg active:border-secondary focus:outline-none focus:ring-2 focus:ring-secondary">
                         <option selected disabled>Pilih Kategori</option>
                         @forelse($categories as $category)
-                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        <option class="hover:bg-secondary" value="{{ $category->id }}">{{ $category->name }}</option>
                         @empty
                         <option disabled>Tidak ada kategori</option>
                         @endforelse
@@ -133,14 +133,14 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Harga</label>
-                    <input type="number" name="harga" placeholder="0" min="1" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg">
+                    <input type="number" name="harga" placeholder="0" min="1" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg active:border-secondary focus:outline-none focus:ring-2 focus:ring-secondary">
                     @error('harga')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
                     @enderror
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
-                    <textarea name="deskripsi" placeholder="Tulis disini..." class="w-full px-3 py-2.5 border border-gray-200 rounded-lg h-24"></textarea>
+                    <textarea name="deskripsi" placeholder="Tulis disini..." class="w-full px-3 py-2.5 border border-gray-200 rounded-lg active:border-secondary focus:outline-none focus:ring-2 focus:ring-secondary h-24"></textarea>
                     @error('deskripsi')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
                     @enderror
@@ -193,17 +193,17 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Nama</label>
-                    <input type="text" name="nama" value="{{ $m->nama }}" placeholder="Masukkan Menu" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg">
+                    <input type="text" name="nama" value="{{ $m->nama }}" placeholder="Masukkan Menu" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg active:border-secondary focus:outline-none focus:ring-2 focus:ring-secondary">
                     @error('nama')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
                     @enderror
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
-                    <select id="category" name="category_id" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg">
+                    <select id="category" name="category_id" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg active:border-secondary focus:outline-none focus:ring-2 focus:ring-secondary">
                         <option selected disabled>Pilih Kategori</option>
                         @forelse($categories as $category)
-                        <option @selected($m->category_id === $category->id) value="{{ $category->id }}">{{ $category->name }}</option>
+                        <option class="hover:bg-secondary" @selected($m->category_id === $category->id) value="{{ $category->id }}">{{ $category->name }}</option>
                         @empty
                         <option disabled>Tidak ada kategori</option>
                         @endforelse
@@ -214,14 +214,14 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Harga</label>
-                    <input type="number" name="harga" value="{{ $m->harga }}" placeholder="0" min="1" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg">
+                    <input type="number" name="harga" value="{{ $m->harga }}" placeholder="0" min="1" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg active:border-secondary focus:outline-none focus:ring-2 focus:ring-secondary">
                     @error('harga')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
                     @enderror
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
-                    <textarea name="deskripsi" placeholder="Tulis disini..." class="w-full px-3 py-2.5 border border-gray-200 rounded-lg h-24">{{ $m->deskripsi }}</textarea>
+                    <textarea name="deskripsi" placeholder="Tulis disini..." class="w-full px-3 py-2.5 border border-gray-200 rounded-lg active:border-secondary focus:outline-none focus:ring-2 focus:ring-secondary h-24">{{ $m->deskripsi }}</textarea>
                     @error('deskripsi')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
                     @enderror

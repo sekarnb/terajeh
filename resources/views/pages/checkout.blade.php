@@ -135,7 +135,7 @@
 </div>
 
 {{-- modal edit --}}
-<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50" id="editModal">
+<div class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50" id="editModal">
     <div class="bg-[#FAF9F7] flex flex-col gap-4 p-4 min-w-xs lg:min-w-md">
         <div class="flex items-center justify-between gap-4">
             <h2 class="text-2xl font-bold">Edit Data Customer</h2>
@@ -185,7 +185,7 @@
                                 <path d="M5.33333 9.33398C5.14444 9.33398 4.98622 9.26998 4.85867 9.14198C4.73111 9.01398 4.66711 8.85576 4.66667 8.66732C4.66622 8.47887 4.73022 8.32065 4.85867 8.19265C4.98711 8.06465 5.14533 8.00065 5.33333 8.00065C5.52133 8.00065 5.67978 8.06465 5.80867 8.19265C5.93756 8.32065 6.00133 8.47887 6 8.66732C5.99867 8.85576 5.93467 9.01421 5.808 9.14265C5.68133 9.2711 5.52311 9.33487 5.33333 9.33398ZM8 9.33398C7.81111 9.33398 7.65289 9.26998 7.52533 9.14198C7.39778 9.01398 7.33378 8.85576 7.33333 8.66732C7.33289 8.47887 7.39689 8.32065 7.52533 8.19265C7.65378 8.06465 7.812 8.00065 8 8.00065C8.188 8.00065 8.34644 8.06465 8.47533 8.19265C8.60422 8.32065 8.668 8.47887 8.66667 8.66732C8.66533 8.85576 8.60133 9.01421 8.47467 9.14265C8.348 9.2711 8.18978 9.33487 8 9.33398ZM10.6667 9.33398C10.4778 9.33398 10.3196 9.26998 10.192 9.14198C10.0644 9.01398 10.0004 8.85576 10 8.66732C9.99956 8.47887 10.0636 8.32065 10.192 8.19265C10.3204 8.06465 10.4787 8.00065 10.6667 8.00065C10.8547 8.00065 11.0131 8.06465 11.142 8.19265C11.2709 8.32065 11.3347 8.47887 11.3333 8.66732C11.332 8.85576 11.268 9.01421 11.1413 9.14265C11.0147 9.2711 10.8564 9.33487 10.6667 9.33398ZM2 14.6673V2.66732H4V1.33398H5.33333V2.66732H10.6667V1.33398H12V2.66732H14V14.6673H2ZM3.33333 13.334H12.6667V6.66732H3.33333V13.334ZM3.33333 5.33398H12.6667V4.00065H3.33333V5.33398Z" fill="#202020" />
                             </svg>
                         </span>
-                        <input type="date" name="tanggal" id="tanggal" class="w-full border-y border-r border-secondary/30 rounded-e p-2" value="{{ \Carbon\Carbon::parse(request('tanggal'))->format('Y-m-d') }}" required>
+                        <input type="date" name="tanggal" id="tanggal" class="appearance-none w-full border-y border-r border-secondary/30 rounded-e p-2" value="{{ \Carbon\Carbon::parse(request('tanggal'))->format('Y-m-d') }}" required>
                     </div>
                 </div>
 
@@ -204,7 +204,7 @@
                                 </defs>
                             </svg>
                         </span>
-                        <input type="time" name="jam" id="jam" class="w-full border-y border-r border-secondary/30 rounded-e p-2" value="{{ \Carbon\Carbon::parse(request('jam'))->format('H:i') }}" required>
+                        <input type="time" name="jam" id="jam" class="appearance-none w-full border-y border-r border-secondary/30 rounded-e p-2" value="{{ \Carbon\Carbon::parse(request('jam'))->format('H:i') }}" required>
                     </div>
                 </div>
             </div>

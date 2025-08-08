@@ -1,6 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Wittgenstein:ital,wght@0,400..900;1,400..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Wittgenstein:ital,wght@0,400..900;1,400..900&display=swap");
 
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -8,16 +8,26 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Open Sans', sans-serif;
-    --font-serif: 'Wittgenstein', serif;
+    --font-sans: "Open Sans", sans-serif;
+    --font-serif: "Wittgenstein", serif;
 
-    --color-primary: #F0EBE4;
-    --color-primary-dark: #E0D5C1;
+    --color-primary: #f0ebe4;
+    --color-primary-dark: #e0d5c1;
 
-    --color-secondary: #2D3832;
-    --color-secondary-dark: #1F2620;
+    --color-secondary: #2d3832;
+    --color-secondary-dark: #1f2620;
 }
 
 @utility container-default {
     @apply px-8 md:px-0 max-w-2xl md:max-w-3xl lg:max-w-5xl xl:max-w-6xl mx-auto;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    display: none;
+    -webkit-appearance: none;
+}
+
+input[type="time"]::-webkit-calendar-picker-indicator {
+    display: none;
+    -webkit-appearance: none;
 }
