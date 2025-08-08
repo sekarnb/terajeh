@@ -165,7 +165,7 @@ class ReservasiController extends Controller
             ]);
         }
 
-        return redirect()->route('pages.payment', $reservasi->id)->with('success', 'Reservasi dan pesanan berhasil dibuat. Silakan unggah bukti pembayaran.');
+        return redirect()->route('pages.payment', $reservasi->id);
     }
 
     public function payment(Reservasi $reservasi)
