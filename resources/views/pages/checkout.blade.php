@@ -180,31 +180,14 @@
                 <div class="flex flex-col gap-2">
                     <label for="tanggal">Tanggal</label>
                     <div class="flex items-center">
-                        <span class="border-y border-l border-secondary/30 rounded-s p-3">
-                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M5.33333 9.33398C5.14444 9.33398 4.98622 9.26998 4.85867 9.14198C4.73111 9.01398 4.66711 8.85576 4.66667 8.66732C4.66622 8.47887 4.73022 8.32065 4.85867 8.19265C4.98711 8.06465 5.14533 8.00065 5.33333 8.00065C5.52133 8.00065 5.67978 8.06465 5.80867 8.19265C5.93756 8.32065 6.00133 8.47887 6 8.66732C5.99867 8.85576 5.93467 9.01421 5.808 9.14265C5.68133 9.2711 5.52311 9.33487 5.33333 9.33398ZM8 9.33398C7.81111 9.33398 7.65289 9.26998 7.52533 9.14198C7.39778 9.01398 7.33378 8.85576 7.33333 8.66732C7.33289 8.47887 7.39689 8.32065 7.52533 8.19265C7.65378 8.06465 7.812 8.00065 8 8.00065C8.188 8.00065 8.34644 8.06465 8.47533 8.19265C8.60422 8.32065 8.668 8.47887 8.66667 8.66732C8.66533 8.85576 8.60133 9.01421 8.47467 9.14265C8.348 9.2711 8.18978 9.33487 8 9.33398ZM10.6667 9.33398C10.4778 9.33398 10.3196 9.26998 10.192 9.14198C10.0644 9.01398 10.0004 8.85576 10 8.66732C9.99956 8.47887 10.0636 8.32065 10.192 8.19265C10.3204 8.06465 10.4787 8.00065 10.6667 8.00065C10.8547 8.00065 11.0131 8.06465 11.142 8.19265C11.2709 8.32065 11.3347 8.47887 11.3333 8.66732C11.332 8.85576 11.268 9.01421 11.1413 9.14265C11.0147 9.2711 10.8564 9.33487 10.6667 9.33398ZM2 14.6673V2.66732H4V1.33398H5.33333V2.66732H10.6667V1.33398H12V2.66732H14V14.6673H2ZM3.33333 13.334H12.6667V6.66732H3.33333V13.334ZM3.33333 5.33398H12.6667V4.00065H3.33333V5.33398Z" fill="#202020" />
-                            </svg>
-                        </span>
-                        <input type="date" name="tanggal" id="tanggal" class="appearance-none w-full border-y border-r border-secondary/30 rounded-e p-2" value="{{ \Carbon\Carbon::parse(request('tanggal'))->format('Y-m-d') }}" required>
+                        <input type="date" name="tanggal" id="tanggal" class="w-full border-y border border-secondary/30 rounded p-2" value="{{ \Carbon\Carbon::parse(request('tanggal'))->format('Y-m-d') }}" required>
                     </div>
                 </div>
 
                 <div class="flex flex-col gap-2">
                     <label for="jam">Jam</label>
                     <div class="flex items-center">
-                        <span class="border-y border-l border-secondary/30 rounded-s p-3">
-                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <g clip-path="url(#clip0_1313_3291)">
-                                    <path d="M8.0013 13.9993C8.78923 13.9993 9.56945 13.8442 10.2974 13.5426C11.0254 13.2411 11.6868 12.7991 12.2439 12.242C12.8011 11.6848 13.2431 11.0234 13.5446 10.2954C13.8461 9.5675 14.0013 8.78728 14.0013 7.99935C14.0013 7.21142 13.8461 6.4312 13.5446 5.70325C13.2431 4.97529 12.8011 4.31386 12.2439 3.75671C11.6868 3.19956 11.0254 2.7576 10.2974 2.45607C9.56945 2.15454 8.78923 1.99935 8.0013 1.99935C6.41 1.99935 4.88388 2.63149 3.75866 3.75671C2.63344 4.88193 2.0013 6.40805 2.0013 7.99935C2.0013 9.59065 2.63344 11.1168 3.75866 12.242C4.88388 13.3672 6.41 13.9993 8.0013 13.9993ZM15.3346 7.99935C15.3346 12.0493 12.0513 15.3327 8.0013 15.3327C3.9513 15.3327 0.667969 12.0493 0.667969 7.99935C0.667969 3.94935 3.9513 0.666016 8.0013 0.666016C12.0513 0.666016 15.3346 3.94935 15.3346 7.99935ZM10.0013 10.942L7.33463 8.27535V3.66602H8.66797V7.72335L10.944 9.99935L10.0013 10.942Z" fill="#202020" />
-                                </g>
-                                <defs>
-                                    <clipPath id="clip0_1313_3291">
-                                        <rect width="16" height="16" fill="white" />
-                                    </clipPath>
-                                </defs>
-                            </svg>
-                        </span>
-                        <input type="time" name="jam" id="jam" class="appearance-none w-full border-y border-r border-secondary/30 rounded-e p-2" value="{{ \Carbon\Carbon::parse(request('jam'))->format('H:i') }}" required>
+                        <input type="time" name="jam" id="jam" class="w-full border-y border border-secondary/30 rounded p-2" value="{{ \Carbon\Carbon::parse(request('jam'))->format('H:i') }}" required>
                     </div>
                 </div>
             </div>

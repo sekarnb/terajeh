@@ -67,21 +67,35 @@
             <label for="nama" class="font-medium text-amber-950">Nama</label>
             <input type="text" id="nama" name="nama" value="{{ old('nama') ?? request('nama') }}" placeholder="Masukan Nama Anda" class="w-full border bg-white border-none px-3 py-2.5" />
             @error('nama')
-                <span class="text-red-500 text-sm">{{ $message }}</span>
+            <span class="text-red-500 text-sm">{{ $message }}</span>
             @enderror
         </div>
         <div class="w-full flex flex-col items-start gap-2">
             <label for="no_hp" class="font-medium text-amber-950">No. HP</label>
-            <input type="number" id="no_hp" name="no_hp" value="{{ old('no_hp') ?? request('no_hp') }}" placeholder="Masukan No. HP Anda" class="w-full border bg-white border-none px-3 py-2.5" />
+            <div class="flex items-center w-full">
+                <span class="border-y border-l border-none bg-white rounded-s p-3.5">
+                    <svg class="size-4" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M11.3 12C9.91111 12 8.53889 11.6973 7.18333 11.092C5.82778 10.4867 4.59444 9.62822 3.48333 8.51667C2.37222 7.40511 1.514 6.17178 0.908667 4.81667C0.303333 3.46156 0.000444444 2.08933 0 0.7C0 0.5 0.0666666 0.333333 0.2 0.2C0.333333 0.0666666 0.5 0 0.7 0H3.4C3.55556 0 3.69444 0.0528888 3.81667 0.158667C3.93889 0.264444 4.01111 0.389333 4.03333 0.533333L4.46667 2.86667C4.48889 3.04444 4.48333 3.19444 4.45 3.31667C4.41667 3.43889 4.35556 3.54444 4.26667 3.63333L2.65 5.26667C2.87222 5.67778 3.136 6.07489 3.44133 6.458C3.74667 6.84111 4.08289 7.21067 4.45 7.56667C4.79444 7.91111 5.15556 8.23067 5.53333 8.52533C5.91111 8.82 6.31111 9.08933 6.73333 9.33333L8.3 7.76667C8.4 7.66667 8.53067 7.59178 8.692 7.542C8.85333 7.49222 9.01156 7.47822 9.16667 7.5L11.4667 7.96667C11.6222 8.01111 11.75 8.09178 11.85 8.20867C11.95 8.32556 12 8.456 12 8.6V11.3C12 11.5 11.9333 11.6667 11.8 11.8C11.6667 11.9333 11.5 12 11.3 12ZM2.01667 4L3.11667 2.9L2.83333 1.33333H1.35C1.40556 1.78889 1.48333 2.23889 1.58333 2.68333C1.68333 3.12778 1.82778 3.56667 2.01667 4ZM7.98333 9.96667C8.41667 10.1556 8.85844 10.3056 9.30867 10.4167C9.75889 10.5278 10.2116 10.6 10.6667 10.6333V9.16667L9.1 8.85L7.98333 9.96667Z" fill="#202020" />
+                    </svg>
+                </span>
+                <input type="number" id="no_hp" name="no_hp" value="{{ old('no_hp') ?? request('no_hp') }}" placeholder="Masukan No. HP Anda" class="w-full border-y border-r border bg-white border-none px-3 py-2.5" />
+            </div>
             @error('no_hp')
-                <span class="text-red-500 text-sm">{{ $message }}</span>
+            <span class="text-red-500 text-sm">{{ $message }}</span>
             @enderror
         </div>
         <div class="w-full flex flex-col items-start gap-2">
             <label for="jumlah_tamu" class="font-medium text-amber-950">Jumlah Tamu</label>
-            <input type="number" id="jumlah_tamu" name="jumlah_tamu" value="{{ old('jumlah_tamu') ?? request('jumlah_tamu') }}" placeholder="Masukan Jumlah Tamu" class="w-full border bg-white border-none px-3 py-2.5" />
+            <div class="flex items-center w-full">
+                <span class="border-y border-l border-none bg-white rounded-s p-3.5">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 3.33398C7.38116 3.33398 6.78767 3.57982 6.35008 4.0174C5.9125 4.45499 5.66667 5.04848 5.66667 5.66732C5.66667 6.28616 5.9125 6.87965 6.35008 7.31723C6.78767 7.75482 7.38116 8.00065 8 8.00065C8.61884 8.00065 9.21233 7.75482 9.64992 7.31723C10.0875 6.87965 10.3333 6.28616 10.3333 5.66732C10.3333 5.04848 10.0875 4.45499 9.64992 4.0174C9.21233 3.57982 8.61884 3.33398 8 3.33398ZM8 4.66732C8.26522 4.66732 8.51957 4.77267 8.70711 4.96021C8.89464 5.14775 9 5.4021 9 5.66732C9 5.93253 8.89464 6.18689 8.70711 6.37442C8.51957 6.56196 8.26522 6.66732 8 6.66732C7.73478 6.66732 7.48043 6.56196 7.29289 6.37442C7.10536 6.18689 7 5.93253 7 5.66732C7 5.4021 7.10536 5.14775 7.29289 4.96021C7.48043 4.77267 7.73478 4.66732 8 4.66732ZM3.66667 5.33398C3.22464 5.33398 2.80072 5.50958 2.48816 5.82214C2.17559 6.1347 2 6.55862 2 7.00065C2 7.62732 2.35333 8.16732 2.86 8.45398C3.1 8.58732 3.37333 8.66732 3.66667 8.66732C3.96 8.66732 4.23333 8.58732 4.47333 8.45398C4.72 8.31398 4.92667 8.11398 5.08 7.87398C4.59432 7.24103 4.33178 6.46513 4.33333 5.66732V5.48065C4.13333 5.38732 3.90667 5.33398 3.66667 5.33398ZM12.3333 5.33398C12.0933 5.33398 11.8667 5.38732 11.6667 5.48065V5.66732C11.6667 6.46732 11.4067 7.24065 10.92 7.87398C11 8.00065 11.0867 8.10065 11.1867 8.20065C11.494 8.49884 11.9051 8.66613 12.3333 8.66732C12.6267 8.66732 12.9 8.58732 13.14 8.45398C13.6467 8.16732 14 7.62732 14 7.00065C14 6.55862 13.8244 6.1347 13.5118 5.82214C13.1993 5.50958 12.7754 5.33398 12.3333 5.33398ZM8 9.33398C6.44 9.33398 3.33333 10.114 3.33333 11.6673V12.6673H12.6667V11.6673C12.6667 10.114 9.56 9.33398 8 9.33398ZM3.14 9.70065C1.85333 9.85398 0 10.5073 0 11.6673V12.6673H2V11.3807C2 10.7073 2.46 10.1473 3.14 9.70065ZM12.86 9.70065C13.54 10.1473 14 10.7073 14 11.3807V12.6673H16V11.6673C16 10.5073 14.1467 9.85398 12.86 9.70065ZM8 10.6673C9.02 10.6673 10.16 11.0007 10.82 11.334H5.18C5.84 11.0007 6.98 10.6673 8 10.6673Z" fill="#202020" />
+                    </svg>
+                </span>
+                <input type="number" id="jumlah_tamu" name="jumlah_tamu" value="{{ old('jumlah_tamu') ?? request('jumlah_tamu') }}" placeholder="Masukan Jumlah Tamu" class="w-full border-y border-r border bg-white border-none px-3 py-2.5" />
+            </div>
             @error('jumlah_tamu')
-                <span class="text-red-500 text-sm">{{ $message }}</span>
+            <span class="text-red-500 text-sm">{{ $message }}</span>
             @enderror
         </div>
         <div class="w-full flex justify-between gap-6">
@@ -89,14 +103,14 @@
                 <label for="tanggal" class="font-medium text-amber-950">Hari/Tanggal</label>
                 <input type="date" id="tanggal" name="tanggal" value="{{ \Carbon\Carbon::parse(old('tanggal'))->format('Y-m-d') ?? \Carbon\Carbon::parse(request('tanggal'))->format('Y-m-d') }}" class="w-full border bg-white border-none px-3 py-2.5" />
                 @error('tanggal')
-                    <span class="text-red-500 text-sm">{{ $message }}</span>
+                <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
             </div>
             <div class="w-full flex flex-col items-start gap-2">
                 <label for="jam" class="font-medium text-amber-950">Jam</label>
                 <input type="time" id="jam" name="jam" value="{{ \Carbon\Carbon::parse(old('jam'))->format('H:i') ?? \Carbon\Carbon::parse(request('jam'))->format('H:i') }}" class="w-full border bg-white border-none px-3 py-2.5" />
                 @error('jam')
-                    <span class="text-red-500 text-sm">{{ $message }}</span>
+                <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
             </div>
         </div>
