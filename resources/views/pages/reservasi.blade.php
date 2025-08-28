@@ -21,8 +21,8 @@
             </div>
 
             <div class="flex flex-col items-start gap-2">
-                <span class="text-xl font-medium text-amber-950">Pembayaran Penuh di Awal</span>
-                <span class="text-lg text-amber-950/75">Reservasi hanya akan diproses setelah pembayaran penuh dilakukan di awal.</span>
+                <span class="text-xl font-medium text-amber-950">Pembayaran DP di Awal</span>
+                <span class="text-lg text-amber-950/75">Reservasi hanya akan diproses setelah DP sebesar Rp. 50.000 atau Rp. 100.000 di awal.</span>
             </div>
         </div>
         <div class="flex flex-col items-start gap-4 p-6 bg-white border border-secondary">

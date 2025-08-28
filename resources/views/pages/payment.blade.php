@@ -26,6 +26,7 @@
         <span class="text-amber-950 text-2xl lg:text-4xl font-bold">Konfirmasi Pembayaran</span>
 
         <span class="text-amber-950 text-lg lg:text-2xl">Total Pembayaran: Rp. {{ number_format($reservasi->total_bayar, 0, ',', '.') }}</span>
+        <span class="text-amber-950 text-lg lg:text-2xl">Total DP: {{ $reservasi->total_bayar < 300000 ? 'Rp. 50.000' : 'Rp. 100.000' }}</span>
 
         <div class="mt-8 w-full flex justify-center">
             <svg width="296" height="296" viewBox="0 0 296 296" fill="none" xmlns="http://www.w3.org/2000/svg">
